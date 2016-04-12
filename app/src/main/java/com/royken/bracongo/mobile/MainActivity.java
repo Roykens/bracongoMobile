@@ -23,7 +23,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.royken.bracongo.mobile.dao.BoissonDao;
+import com.royken.bracongo.mobile.dao.PointDvao;
 import com.royken.bracongo.mobile.entities.Boisson;
+import com.royken.bracongo.mobile.entities.PointDeVente;
 import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 import com.royken.bracongo.mobile.util.WebserviceUtil;
 
@@ -41,7 +43,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+  /*      FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
+*/
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -69,13 +71,21 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
        // LongOperation longo = new LongOperation();
        // longo.execute();
-        AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
-        if (androidNetworkUtility.isConnected(this)) {
-            Log.i("Test Connection", "Connected.");
-            new LongOperation().execute();
-        } else {
-            Log.v("Test Connecion", "Network not Available!");
-        }
+      //  PlanningAsyncTask asc = new PlanningAsyncTask();
+
+/*        try{
+
+            AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+            if (androidNetworkUtility.isConnected(this)) {
+                Log.i("Test Connection", "Connected.");
+                new LongOperation().execute();
+                new PlanningAsyncTask().execute();
+            } else {
+                Log.v("Test Connecion", "Network not Available!");
+            }
+        }catch (Exception e){}
+*/
+
     }
 
     @Override
@@ -133,7 +143,7 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
         } else if (id == R.id.nav_gallery) {
             title = "Two";
-            fragment = TwoFragment.newInstance("","");
+            fragment = TwoFragment.newInstance("BONJOUR","");
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment);
             ft.addToBackStack(null);
@@ -161,7 +171,15 @@ public class MainActivity extends AppCompatActivity
             transaction.replace(R.id.mainFrame, fragment);
             transaction.commit();
 
-        } else if (id == R.id.nav_share) {
+        }
+        else if(id == R.id.nav_planning){
+            title = "Planning";
+            fragment = PlanningFragment.newInstance("","");
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
@@ -227,6 +245,9 @@ public class MainActivity extends AppCompatActivity
             try {
                 JSONObject obj = new JSONObject(productJSONStr);
                 JSONArray biBrac = obj.getJSONArray("biereBracongo");
+                JSONArray bgBrac = obj.getJSONArray("bgBracongo");
+                JSONArray biBral = obj.getJSONArray("bierreBralima");
+                JSONArray bgBral =  obj.getJSONArray("bgBralima");
                 for (int i = 0; i < biBrac.length(); i++) {
                     JSONObject object = biBrac.getJSONObject(i);
                     Boisson boisson = new Boisson();
@@ -234,6 +255,36 @@ public class MainActivity extends AppCompatActivity
                     boisson.setNom(object.getString("nomFormat"));
                     boisson.setIsBracongo(true);
                     boisson.setIsBi(true);
+                    dao.insertBoisson(boisson);
+                    Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
+                }
+                for (int i = 0; i < bgBrac.length(); i++) {
+                    JSONObject object = biBrac.getJSONObject(i);
+                    Boisson boisson = new Boisson();
+                    boisson.setIdServeur(object.getInt("idFormatBoisson"));
+                    boisson.setNom(object.getString("nomFormat"));
+                    boisson.setIsBracongo(true);
+                    boisson.setIsBi(false);
+                    dao.insertBoisson(boisson);
+                    Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
+                }
+                for (int i = 0; i < biBral.length(); i++) {
+                    JSONObject object = biBrac.getJSONObject(i);
+                    Boisson boisson = new Boisson();
+                    boisson.setIdServeur(object.getInt("idFormatBoisson"));
+                    boisson.setNom(object.getString("nomFormat"));
+                    boisson.setIsBracongo(false);
+                    boisson.setIsBi(true);
+                    dao.insertBoisson(boisson);
+                    Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
+                }
+                for (int i = 0; i < bgBrac.length(); i++) {
+                    JSONObject object = biBrac.getJSONObject(i);
+                    Boisson boisson = new Boisson();
+                    boisson.setIdServeur(object.getInt("idFormatBoisson"));
+                    boisson.setNom(object.getString("nomFormat"));
+                    boisson.setIsBracongo(false);
+                    boisson.setIsBi(false);
                     dao.insertBoisson(boisson);
                     Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
                 }
@@ -254,6 +305,88 @@ public class MainActivity extends AppCompatActivity
             List<Boisson> boissonList = dao.boissons();
             Log.i("BDTEST DD", boissonList.size()+" elements");
             Toast.makeText(getApplicationContext(),boissonList.size() +" elements",Toast.LENGTH_LONG).show();
+
+
+
+        }
+
+    }
+
+    private class PlanningAsyncTask  extends AsyncTask<String, Void, Void> {
+
+
+
+        // Required initialization
+
+        private final HttpClient Client = new DefaultHttpClient();
+        private String Content;
+        private String Error = null;
+        private ProgressDialog Dialog = new ProgressDialog(MainActivity.this);
+        String data ="";
+
+
+        protected void onPreExecute() {
+            // NOTE: You can call UI Element here.
+
+            //Start Progress Dialog (Message)
+
+            Dialog.setMessage("Please wait..");
+            Dialog.show();
+
+        }
+
+        // Call after onPreExecute method
+        protected Void doInBackground(String... urls) {
+          //  BoissonDao dao = new BoissonDao(getApplicationContext());
+            PointDvao dao = new PointDvao(getApplicationContext());
+            Log.i("", "getProducts de planning......");
+            // ArrayList<Product> productList = null;
+            HttpGet httpGet = new HttpGet("http://10.0.2.2:8080/bracongo/api/pdv/551");
+
+            //setting header to request for a JSON response
+            httpGet.setHeader("Accept", "application/json");
+            AndroidNetworkUtility httpUtil = new AndroidNetworkUtility();
+            String productJSONStr = httpUtil.getHttpResponse(httpGet);
+            Log.d("", "Response: " + productJSONStr);
+
+            try {
+                JSONObject obj = new JSONObject(productJSONStr);
+                JSONArray pdvs = obj.getJSONArray("pointDeVentes");
+
+                for (int i = 0; i < pdvs.length(); i++) {
+                    JSONObject object = pdvs.getJSONObject(i);
+                    PointDeVente pointDeVente = new PointDeVente();
+                    pointDeVente.setNom(object.getString("nom"));
+                    pointDeVente.setType(object.getString("typePdv"));
+                    pointDeVente.setCategorie(object.getString("typeCategorie"));
+                    pointDeVente.setRegime(object.getString("typeRegime"));
+                    pointDeVente.setIdServeur(object.getInt("id"));
+                    pointDeVente.setLatitude(object.getDouble("latitude"));
+                    pointDeVente.setLongitude(object.getDouble("longitude"));
+                    pointDeVente.setAdresse(object.getString("adresse"));
+
+                    dao.insertPdv(pointDeVente);
+                    Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+
+        protected void onPostExecute(Void unused) {
+            // NOTE: You can call UI Element here.
+            Log.i("Fin","J'ai fini");
+            // Close progress dialog
+            Dialog.dismiss();
+
+            PointDvao dao = new PointDvao(getApplicationContext());
+            List<PointDeVente> pointDeVentes = dao.pointDeVentes();
+
+            Log.i("BDTEST DD", pointDeVentes.size()+" elements");
+            Toast.makeText(getApplicationContext(),pointDeVentes.size() +" elements",Toast.LENGTH_LONG).show();
 
 
 

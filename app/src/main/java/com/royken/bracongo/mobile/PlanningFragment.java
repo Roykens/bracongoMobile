@@ -1,64 +1,58 @@
 package com.royken.bracongo.mobile;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.royken.bracongo.mobile.adapter.BoissonCustomAdapter;
-import com.royken.bracongo.mobile.dao.BoissonDao;
-import com.royken.bracongo.mobile.dummy.DummyContent;
+import com.royken.bracongo.mobile.adapter.PoinDeVenteCustomAdapter;
+import com.royken.bracongo.mobile.dao.PointDvao;
 import com.royken.bracongo.mobile.entities.Boisson;
-import com.royken.bracongo.mobile.util.WebserviceUtil;
+import com.royken.bracongo.mobile.entities.PointDeVente;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TwoFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TwoFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by royken on 11/04/16.
  */
-public class TwoFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class PlanningFragment extends ListFragment implements AdapterView.OnItemClickListener {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private List<Boisson> boissons1 = new ArrayList<>();
+    private static final String ARG_ID = "id";
+    private static final String ARG_IDS = "ids";
+    private static final String ARG_NOM = "nom";
+    private static final String ARG_ADRESSE = "adresse";
+    private static final String ARG_LATITUDE = "latitude";
+    private static final String ARG_LONGITUDE = "longitude";
+    private static final String ARG_TYPE = "type";
+    private static final String ARG_REGIME = "regime";
+    private static final String ARG_CATEGORIE = "categorie";
+
+    private List<PointDeVente> pointDeVentes = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private int id;
+    private int ids;
+    private String nom;
+    private String adresse;
+    private double latitude;
+    private double longitude;
+    private String type;
+    private String categorie;
+    private String regime;
 
     private OnFragmentInteractionListener mListener;
 
@@ -71,8 +65,8 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
      * @return A new instance of fragment TwoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TwoFragment newInstance(String param1, String param2) {
-        TwoFragment fragment = new TwoFragment();
+    public static PlanningFragment newInstance(String param1, String param2) {
+        PlanningFragment fragment = new PlanningFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -80,7 +74,24 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
         return fragment;
     }
 
-    public TwoFragment() {
+    public static PlanningFragment newInstance(int id, int ids, String nom, String adresse, double longitude, double latitude,String type, String regime, String categorie) {
+        PlanningFragment fragment = new PlanningFragment();
+        Bundle args = new Bundle();
+
+        args.putInt(ARG_ID,id);
+        args.putInt(ARG_IDS,ids);
+        args.putString(ARG_NOM, nom);
+        args.putString(ARG_ADRESSE, adresse);
+        args.putDouble(ARG_LATITUDE, latitude);
+        args.putDouble(ARG_LONGITUDE, longitude);
+        args.putString(ARG_TYPE, type);
+        args.putString(ARG_CATEGORIE, categorie);
+        args.putString(ARG_REGIME, regime);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public PlanningFragment() {
         // Required empty public constructor
     }
 
@@ -90,26 +101,30 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            id = getArguments().getInt(ARG_ID);
+            ids = getArguments().getInt(ARG_IDS);
+            nom = getArguments().getString(ARG_NOM);
+            adresse = getArguments().getString(ARG_ADRESSE);
+            latitude = getArguments().getDouble(ARG_LATITUDE);
+            longitude = getArguments().getDouble(ARG_LONGITUDE);
+            type = getArguments().getString(ARG_TYPE);
+            regime = getArguments().getString(ARG_REGIME);
+            categorie = getArguments().getString(ARG_CATEGORIE);
         }
         setRetainInstance(true);
-        BoissonDao dao = new BoissonDao(getActivity().getApplicationContext());
-         boissons1 = dao.boissons();
-        BoissonCustomAdapter boissonCustomAdapter = new BoissonCustomAdapter(getActivity(),boissons1);
+        PointDvao dao = new PointDvao(getActivity().getApplicationContext());
+        pointDeVentes = dao.pointDeVentes();
+        PoinDeVenteCustomAdapter boissonCustomAdapter = new PoinDeVenteCustomAdapter(getActivity(),pointDeVentes);
 
-       // CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), R.layout.fragment_card_list);
+        // CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), R.layout.fragment_card_list);
 
 
         setListAdapter(boissonCustomAdapter);
-        Log.i("TESTDEPASSAGEDEDONEES ",mParam1);
-        //Toast.makeText(getActivity().getApplicationContext(),mParam1,Toast.LENGTH_LONG);
         // TODO: Change Adapter to display your content
         //   setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
         //         android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS));
 
     }
-
-
-
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -154,12 +169,18 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+
+                Fragment fragment = PointDeVenteFragment.newInstance(pointDeVentes.get(position).getId(),pointDeVentes.get(position).getIdServeur(),pointDeVentes.get(position).getNom(),pointDeVentes.get(position).getAdresse(),pointDeVentes.get(position).getLongitude(),pointDeVentes.get(position).getLatitude(),pointDeVentes.get(position).getType(),pointDeVentes.get(position).getRegime(),pointDeVentes.get(position).getCategorie());
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.mainFrame,fragment);
+                ft.addToBackStack(null);
+                ft.commit();
 
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-           // mListener.onFragmentInteraction(boissons1.get(position).getId());
+            // mListener.onFragmentInteraction(boissons1.get(position).getId());
         }
     }
 
@@ -167,18 +188,6 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-
 
 
 }

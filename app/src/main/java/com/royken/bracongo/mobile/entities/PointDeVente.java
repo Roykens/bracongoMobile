@@ -19,11 +19,11 @@ public class PointDeVente implements Serializable {
 
     private double longitude;
 
-    private int categorie;
+    private String categorie;
 
-    private int regime;
+    private String regime;
 
-    private int type;
+    private String type;
 
 
     public int getId() {
@@ -74,27 +74,27 @@ public class PointDeVente implements Serializable {
         this.longitude = longitude;
     }
 
-    public int getCategorie() {
+    public String getCategorie() {
         return categorie;
     }
 
-    public void setCategorie(int categorie) {
+    public void setCategorie(String categorie) {
         this.categorie = categorie;
     }
 
-    public int getRegime() {
+    public String getRegime() {
         return regime;
     }
 
-    public void setRegime(int regime) {
+    public void setRegime(String regime) {
         this.regime = regime;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 }
