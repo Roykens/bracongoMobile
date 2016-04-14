@@ -22,9 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.royken.bracongo.mobile.dao.BoissonDao;
-import com.royken.bracongo.mobile.dao.PointDvao;
-import com.royken.bracongo.mobile.entities.Boisson;
+import com.royken.bracongo.mobile.dao.*;
+import com.royken.bracongo.mobile.entities.*;
 import com.royken.bracongo.mobile.entities.PointDeVente;
 import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 import com.royken.bracongo.mobile.util.WebserviceUtil;
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity
        // longo.execute();
       //  PlanningAsyncTask asc = new PlanningAsyncTask();
 
-/*        try{
+ /*       try{
 
             AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
             if (androidNetworkUtility.isConnected(this)) {
@@ -84,8 +83,8 @@ public class MainActivity extends AppCompatActivity
                 Log.v("Test Connecion", "Network not Available!");
             }
         }catch (Exception e){}
-*/
 
+*/
     }
 
     @Override
@@ -231,7 +230,8 @@ public class MainActivity extends AppCompatActivity
         // Call after onPreExecute method
         protected Void doInBackground(String... urls) {
             BoissonDao dao = new BoissonDao(getApplicationContext());
-
+            MaterielDao matDao = new MaterielDao(getApplicationContext());
+            PlvDao plvDao = new PlvDao(getApplicationContext());
             Log.i("", "getProducts ......");
            // ArrayList<Product> productList = null;
             HttpGet httpGet = new HttpGet("http://10.0.2.2:8080/bracongo/api/question");
@@ -248,6 +248,8 @@ public class MainActivity extends AppCompatActivity
                 JSONArray bgBrac = obj.getJSONArray("bgBracongo");
                 JSONArray biBral = obj.getJSONArray("bierreBralima");
                 JSONArray bgBral =  obj.getJSONArray("bgBralima");
+                JSONArray plvs = obj.getJSONArray("plvs");
+                JSONArray materiels = obj.getJSONArray("materiels");
                 for (int i = 0; i < biBrac.length(); i++) {
                     JSONObject object = biBrac.getJSONObject(i);
                     Boisson boisson = new Boisson();
@@ -259,7 +261,7 @@ public class MainActivity extends AppCompatActivity
                     Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
                 }
                 for (int i = 0; i < bgBrac.length(); i++) {
-                    JSONObject object = biBrac.getJSONObject(i);
+                    JSONObject object = bgBrac.getJSONObject(i);
                     Boisson boisson = new Boisson();
                     boisson.setIdServeur(object.getInt("idFormatBoisson"));
                     boisson.setNom(object.getString("nomFormat"));
@@ -269,7 +271,7 @@ public class MainActivity extends AppCompatActivity
                     Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
                 }
                 for (int i = 0; i < biBral.length(); i++) {
-                    JSONObject object = biBrac.getJSONObject(i);
+                    JSONObject object = biBral.getJSONObject(i);
                     Boisson boisson = new Boisson();
                     boisson.setIdServeur(object.getInt("idFormatBoisson"));
                     boisson.setNom(object.getString("nomFormat"));
@@ -278,14 +280,31 @@ public class MainActivity extends AppCompatActivity
                     dao.insertBoisson(boisson);
                     Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
                 }
-                for (int i = 0; i < bgBrac.length(); i++) {
-                    JSONObject object = biBrac.getJSONObject(i);
+                for (int i = 0; i < bgBral.length(); i++) {
+                    JSONObject object = bgBral.getJSONObject(i);
                     Boisson boisson = new Boisson();
                     boisson.setIdServeur(object.getInt("idFormatBoisson"));
                     boisson.setNom(object.getString("nomFormat"));
                     boisson.setIsBracongo(false);
                     boisson.setIsBi(false);
                     dao.insertBoisson(boisson);
+                    Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
+                }
+                for (int i = 0; i < plvs.length(); i++) {
+                    JSONObject object = plvs.getJSONObject(i);
+                    Plv plv = new Plv();
+                    plv.setNom(object.getString("nom"));
+                    plv.setIdServeur(object.getInt("id"));
+                    plvDao.insertPlv(plv);
+                    Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
+                }
+                for (int i = 0; i < materiels.length(); i++) {
+                    JSONObject object = materiels.getJSONObject(i);
+
+                    Materiel materiel = new Materiel();
+                    materiel.setNom(object.getString("nom"));
+                    materiel.setIdServeur(object.getInt("id"));
+                    matDao.insertMateriel(materiel);
                     Log.i("INSERTION","JAI INSERER LELEMENT " + i+1);
                 }
             } catch (JSONException e) {

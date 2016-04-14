@@ -16,6 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -113,7 +114,14 @@ public class PointDeVenteFragment extends Fragment{
         }
 
         mMap = mMapView.getMap();
+
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(-4.3257419, 15.3384682))
+                .title("Moi")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
         LatLng pdv = new LatLng(latitude, longitude);
+        //LatLng moi = new LatLng(-4.3257419,15.3384682);
         Marker hamburg = mMap.addMarker(new MarkerOptions().position(pdv)
                 .title(nom).snippet(adresse));
  /*       Marker kiel = mMap.addMarker(new MarkerOptions()
@@ -125,9 +133,10 @@ public class PointDeVenteFragment extends Fragment{
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pdv, 15));
 
         // Zoom in, animating the camera.
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.pdvBtn);

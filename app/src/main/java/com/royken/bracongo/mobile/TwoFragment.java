@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import com.royken.bracongo.mobile.adapter.BoissonCustomAdapter;
 import com.royken.bracongo.mobile.dao.BoissonDao;
 import com.royken.bracongo.mobile.dummy.DummyContent;
 import com.royken.bracongo.mobile.entities.Boisson;
+import com.royken.bracongo.mobile.entities.projection.BoissonProjection;
 import com.royken.bracongo.mobile.util.WebserviceUtil;
 
 import org.apache.http.client.HttpClient;
@@ -49,18 +52,21 @@ import java.util.List;
  * Use the {@link TwoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TwoFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class TwoFragment extends Fragment implements AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private List<Boisson> boissons1 = new ArrayList<>();
+    BoissonCustomAdapter boissonCustomAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private ListView listView;
 
     /**
      * Use this factory method to create a new instance of
@@ -94,12 +100,12 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
         setRetainInstance(true);
         BoissonDao dao = new BoissonDao(getActivity().getApplicationContext());
          boissons1 = dao.boissons();
-        BoissonCustomAdapter boissonCustomAdapter = new BoissonCustomAdapter(getActivity(),boissons1);
+
 
        // CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), R.layout.fragment_card_list);
 
-
-        setListAdapter(boissonCustomAdapter);
+        //listView = (ListView)fi;
+      //  setListAdapter(boissonCustomAdapter);
         Log.i("TESTDEPASSAGEDEDONEES ",mParam1);
         //Toast.makeText(getActivity().getApplicationContext(),mParam1,Toast.LENGTH_LONG);
         // TODO: Change Adapter to display your content
@@ -108,7 +114,58 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
 
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.bi_bracongo, container, false);
+        TextView tv = (TextView) rootView.findViewById(R.id.toto);
+        listView = (ListView)rootView.findViewById(android.R.id.list);
 
+
+        Button btn = (Button)rootView.findViewById(R.id.btnTest);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText prix = null;
+                EditText stock = null;
+                TextView nom = null;
+                List<BoissonProjection> boissonProjections = boissonCustomAdapter.getBoissonProjections();
+                if(boissonProjections.size() > 0){
+                    for (BoissonProjection projection:boissonProjections){
+                        Log.i("TEST LISTES 1", projection.getNom() + " prix " + projection.getPrix() + " stock"+ projection.getStock());
+                    }
+                }
+/*
+                for (int i = 0; i < listView.getCount(); i++) {
+                    if(listView.getChildAt(i) != null) {
+                        nom = (TextView) listView.getChildAt(i).findViewById(R.id.textView2);
+                        prix = (EditText) listView.getChildAt(i).findViewById(R.id.txtPrix);
+                        stock = (EditText) listView.getChildAt(i).findViewById(R.id.txtStock);
+                    }
+                    if (nom!=null && prix != null) {
+                        Log.i("Test LISTES",nom.getText().toString() + " prix " + prix.getText().toString() + " stock " + stock.getText().toString());
+                    }
+                }
+                */
+            }
+        });
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(boissons1 != null){
+            boissonCustomAdapter = new BoissonCustomAdapter(getActivity(),boissons1);
+            listView.setAdapter(boissonCustomAdapter);
+
+            //getListView().setOnItemClickListener(this);
+        }
+
+    }
 
 
 
@@ -150,7 +207,7 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
+/*
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -162,7 +219,7 @@ public class TwoFragment extends ListFragment implements AdapterView.OnItemClick
            // mListener.onFragmentInteraction(boissons1.get(position).getId());
         }
     }
-
+*/
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
