@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity
             //ft.
             ft.commit();
         } else if (id == R.id.nav_gallery) {
-            title = "Two";
+           // title = "Two";
             fragment = TwoFragment.newInstance("BONJOUR","");
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment);

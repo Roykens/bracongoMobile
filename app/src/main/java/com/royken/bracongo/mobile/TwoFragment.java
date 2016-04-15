@@ -6,7 +6,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +26,7 @@ import com.royken.bracongo.mobile.dao.BoissonDao;
 import com.royken.bracongo.mobile.dummy.DummyContent;
 import com.royken.bracongo.mobile.entities.Boisson;
 import com.royken.bracongo.mobile.entities.projection.BoissonProjection;
+import com.royken.bracongo.mobile.entities.projection.Reponse;
 import com.royken.bracongo.mobile.util.WebserviceUtil;
 
 import org.apache.http.client.HttpClient;
@@ -35,6 +39,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -57,13 +62,20 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_BIERE = "biere";
+    private static String ARG_BRA = "bracongo";
+    private static String ARG_BOISSON = "boissons";
     private List<Boisson> boissons1 = new ArrayList<>();
     BoissonCustomAdapter boissonCustomAdapter;
+    String title;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private boolean mBiere;
+    private boolean mbBacongo;
+    private List<BoissonProjection> boissonProjections;
+    private Reponse reponse;
     private OnFragmentInteractionListener mListener;
 
     private ListView listView;
@@ -86,6 +98,17 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
         return fragment;
     }
 
+    public static TwoFragment newInstance(boolean biere, boolean bracongo,List<BoissonProjection> boissonProjections) {
+        TwoFragment fragment = new TwoFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_BIERE,biere);
+        args.putBoolean(ARG_BRA, bracongo);
+       // args.putParcelableArrayList(null, boissonProjections);
+        args.putSerializable(ARG_BOISSON, (Serializable) boissonProjections);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public TwoFragment() {
         // Required empty public constructor
     }
@@ -94,19 +117,31 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+          //  mParam1 = getArguments().getString(ARG_PARAM1);
+           // mParam2 = getArguments().getString(ARG_PARAM2);
+            mBiere = getArguments().getBoolean(ARG_BIERE);
+            mbBacongo = getArguments().getBoolean(ARG_BRA);
+            if(!mBiere || !mbBacongo ){
+                boissonProjections = (List<BoissonProjection>)getArguments().getSerializable(ARG_BOISSON);
+            }
+            else {
+                title = "Bi Bracongo";
+                boissonProjections = new ArrayList<>();
+            }
+
         }
         setRetainInstance(true);
         BoissonDao dao = new BoissonDao(getActivity().getApplicationContext());
-         boissons1 = dao.boissons();
+         boissons1 = dao.getBoissonsByCriteria(mbBacongo, mBiere);
+
+       //  boissons1 = dao.boissons();
 
 
        // CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), R.layout.fragment_card_list);
 
         //listView = (ListView)fi;
       //  setListAdapter(boissonCustomAdapter);
-        Log.i("TESTDEPASSAGEDEDONEES ",mParam1);
+       // Log.i("TESTDEPASSAGEDEDONEES ", mParam1);
         //Toast.makeText(getActivity().getApplicationContext(),mParam1,Toast.LENGTH_LONG);
         // TODO: Change Adapter to display your content
         //   setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
@@ -122,9 +157,85 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
         TextView tv = (TextView) rootView.findViewById(R.id.toto);
         listView = (ListView)rootView.findViewById(android.R.id.list);
 
-
         Button btn = (Button)rootView.findViewById(R.id.btnTest);
+
         btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reponse  = (Reponse)getActivity().getApplicationContext();
+
+               // Log.i("TOTAL","J'ai au total "+ boissonProjections.size() +" 2");
+                String title = "";
+                if (mbBacongo && mBiere) {
+                    List<BoissonProjection> projections = boissonCustomAdapter.getBoissonProjections();
+                    Log.i("TOTAL","J'ai au total "+ projections.size() +"2");
+                    if (projections.size() > 0) {
+                        for (BoissonProjection projection:projections){
+                            reponse.addBoisson(projection);
+
+                        }
+                    }
+                     title = "BG BRACONGO";
+                    Fragment fragment = TwoFragment.newInstance(false, true, boissonProjections);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.mainFrame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+                if (mbBacongo && !mBiere) {
+                    List<BoissonProjection> projections = boissonCustomAdapter.getBoissonProjections();
+                    Log.i("TOTAL","J'ai au total "+ projections.size() +" 3");
+                    if (projections.size() > 0) {
+                        for (BoissonProjection projection:projections){
+                            reponse.addBoisson(projection);
+
+                        }
+                    }
+                    title = "Bières Bralima";
+                    Fragment fragment = TwoFragment.newInstance(true, false, boissonProjections);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.mainFrame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+                if (!mbBacongo && mBiere) {
+                    List<BoissonProjection> projections = boissonCustomAdapter.getBoissonProjections();
+                    Log.i("TOTAL","J'ai au total "+ projections.size() +" 4");
+                    if (projections.size() > 0) {
+                        for (BoissonProjection projection:projections){
+                            reponse.addBoisson(projection);
+
+                        }
+                    }
+                    title = "BG Bralima";
+                    Fragment fragment = TwoFragment.newInstance(false, false, boissonProjections);
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.mainFrame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+
+                if (!mbBacongo && !mBiere) {
+                    List<BoissonProjection> projections = boissonCustomAdapter.getBoissonProjections();
+                    Log.i("TOTAL","J'ai au total "+ projections.size() +" 5");
+                    if (projections.size() > 0) {
+                        for (BoissonProjection projection:projections){
+                            reponse.addBoisson(projection);
+
+                        }
+                    }
+                    List<BoissonProjection> boissonProjections1 = reponse.getBoissonProjections();
+                    Log.i("TOTAL","J'ai au total "+ boissonProjections1.size());
+                    if (boissonProjections1.size() > 0) {
+                        for (BoissonProjection projection:boissonProjections1){
+                            Log.i("TEST LISTES 1", projection.getNom() + " prix " + projection.getPrix() + " stock"+ projection.getStock());
+                        }
+                    }
+                }
+
+            }
+        });
+     /*   btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText prix = null;
@@ -136,20 +247,14 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
                         Log.i("TEST LISTES 1", projection.getNom() + " prix " + projection.getPrix() + " stock"+ projection.getStock());
                     }
                 }
-/*
-                for (int i = 0; i < listView.getCount(); i++) {
-                    if(listView.getChildAt(i) != null) {
-                        nom = (TextView) listView.getChildAt(i).findViewById(R.id.textView2);
-                        prix = (EditText) listView.getChildAt(i).findViewById(R.id.txtPrix);
-                        stock = (EditText) listView.getChildAt(i).findViewById(R.id.txtStock);
-                    }
-                    if (nom!=null && prix != null) {
-                        Log.i("Test LISTES",nom.getText().toString() + " prix " + prix.getText().toString() + " stock " + stock.getText().toString());
-                    }
-                }
                 */
-            }
-        });
+/*
+
+                */
+  /*          }
+        });*/
+
+
 
         return rootView;
     }
@@ -164,6 +269,7 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
 
             //getListView().setOnItemClickListener(this);
         }
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(title);
 
     }
 

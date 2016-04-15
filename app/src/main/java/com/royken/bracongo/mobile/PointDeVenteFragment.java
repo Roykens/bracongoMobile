@@ -4,13 +4,16 @@ package com.royken.bracongo.mobile;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,7 +23,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.royken.bracongo.mobile.entities.PointDeVente;
+import com.royken.bracongo.mobile.util.GMapV2Direction;
+import com.royken.bracongo.mobile.util.GMapV2DirectionAsyncTask;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +130,7 @@ public class PointDeVenteFragment extends Fragment{
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
         LatLng pdv = new LatLng(latitude, longitude);
-        //LatLng moi = new LatLng(-4.3257419,15.3384682);
+        LatLng moi = new LatLng(-4.3257419,15.3384682);
         Marker hamburg = mMap.addMarker(new MarkerOptions().position(pdv)
                 .title(nom).snippet(adresse));
  /*       Marker kiel = mMap.addMarker(new MarkerOptions()
@@ -137,14 +146,22 @@ public class PointDeVenteFragment extends Fragment{
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        route(moi, pdv, "");
 
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.pdvBtn);
+
+        Button fab = (Button) rootView.findViewById(R.id.pdvBtn);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               Fragment fragment = TwoFragment.newInstance(true,true,null);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.mainFrame, fragment);
+                ft.addToBackStack(null);
+
+                ft.commit();
+          //      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            //            .setAction("Action", null).show();
             }
         });
 
@@ -188,5 +205,30 @@ public class PointDeVenteFragment extends Fragment{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    protected void route(LatLng sourcePosition, LatLng destPosition, String mode) {
+        final Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                try {
+                    Document doc = (Document) msg.obj;
+                    GMapV2Direction md = new GMapV2Direction();
+                    ArrayList<LatLng> directionPoint = md.getDirection(doc);
+                    PolylineOptions rectLine = new PolylineOptions().width(15).color(getActivity().getResources().getColor(R.color.colorBracongo));
+
+                    for (int i = 0; i < directionPoint.size(); i++) {
+                        rectLine.add(directionPoint.get(i));
+                    }
+                    Polyline polylin = mMap.addPolyline(rectLine);
+                    md.getDurationText(doc);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            ;
+        };
+
+        new GMapV2DirectionAsyncTask(handler, sourcePosition, destPosition, GMapV2Direction.MODE_DRIVING).execute();
     }
 }

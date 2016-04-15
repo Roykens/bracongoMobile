@@ -4,11 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.Serializable;
+
 /**
  * Created by royken on 14/04/16.
  */
 
-public class BoissonProjection implements Parcelable{
+public class BoissonProjection implements Parcelable, Serializable{
 
     private String nom;
     private int idSrveur;

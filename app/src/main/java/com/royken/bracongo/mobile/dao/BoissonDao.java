@@ -73,6 +73,42 @@ public class BoissonDao {
         return cursorToBoisson(c);
     }
 
+    public ArrayList<Boisson> getBoissonsByCriteria(boolean isBracongo,boolean isBiere){
+        ArrayList<Boisson> boissons = new ArrayList<>();
+        Cursor mCursor = db.rawQuery("select * from " + TABLE_BOISSON +" where " +COL_BISBRAC + " = " + (isBracongo ? 1:0) + " and " + COL_BISBI + " = " + (isBiere ? 1:0), null);
+        int id1;
+        int id2;
+        int isBra;
+        int isBi;
+        String nom;
+        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
+            Boisson boisson = new Boisson();
+            id1 = mCursor.getInt(0);
+            id2 = mCursor.getInt(1);
+            nom = mCursor.getString(2);
+            isBra = mCursor.getInt(3);
+            isBi = mCursor.getInt(4);
+            boisson.setNom(nom);
+            boisson.setIdServeur(id2);
+            boisson.setId(id1);
+            if (isBra == 1) {
+                boisson.setIsBracongo(true);
+            } else {
+                boisson.setIsBracongo(false);
+            }
+            if (isBi == 1) {
+                boisson.setIsBi(true);
+            } else {
+                boisson.setIsBi(false);
+            }
+            boissons.add(boisson);
+        }
+        mCursor.close();
+        // connection.close();
+        return boissons;
+
+    }
+
     public ArrayList<Boisson> boissons() {
         //connection.open();
         ArrayList<Boisson> boissons = new ArrayList<Boisson>();
