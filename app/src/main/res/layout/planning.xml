@@ -8,13 +8,32 @@
         android:layout_width="fill_parent"
         android:layout_marginBottom="10dp"
         >
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="0dp">
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_weight="20"
+            android:paddingLeft="5dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="5dp"
+            android:contentDescription="@string/app_name" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical"
             android:paddingLeft="15dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
             android:paddingRight="15dp"
             android:background="@drawable/card_background_selector"
+            android:layout_weight="80"
             android:descendantFocusability="afterDescendants">
             <TextView
                 android:layout_width="fill_parent"
@@ -23,7 +42,7 @@
                 android:id="@+id/nomPdv"
                 android:background="@color/accent_material_dark"
                 android:textStyle="bold"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:textAlignment="center"/>
             <RelativeLayout
                 android:orientation="horizontal"
@@ -38,6 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="15sp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Reg : "
                     android:id="@+id/regLabel" />
@@ -45,6 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="15sp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="PVE"
                     android:id="@+id/regPdv" />
@@ -59,6 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="15sp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Cat : "
                     android:id="@+id/CatLabel" />
@@ -66,6 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="15sp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Di"
                     android:id="@+id/catPdv" />
@@ -83,6 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="15sp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Type : "
                     android:id="@+id/typeLabel" />
@@ -90,6 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="15sp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="PVE"
                     android:id="@+id/typePdv" />
@@ -98,6 +123,7 @@
 
 
 
+        </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </FrameLayout>

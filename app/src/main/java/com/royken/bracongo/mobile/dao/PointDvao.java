@@ -108,6 +108,11 @@ public class PointDvao {
         return pointDeVentes;
     }
 
+    public void clear(){
+        String query = "DELETE * FROM " +TABLE_PDV; ;
+        db.execSQL(query);
+    }
+
     public PointDeVente getPointById(int id) {
         Cursor c = db.query(TABLE_PDV, new String[]{COL_PDID, COL_PDIDS, COL_PDNAME, COL_PDADRESSE, COL_PDLAT, COL_PDLONG, COL_PDTYPE, COL_PDCATEGORIE, COL_PDREGIME}, COL_PDID + " = \"" + id + "\"", null, null, null, null);
         return cursorToPointDeVente(c);

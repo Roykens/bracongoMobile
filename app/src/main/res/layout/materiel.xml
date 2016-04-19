@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    xmlns:cardView="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:layout_height="match_parent" tools:context="com.royken.bracongo.mobile.TwoFragment" android:descendantFocusability="afterDescendants">
+    <android.support.v7.widget.CardView  xmlns:android="http://schemas.android.com/apk/res/android"  xmlns:tools="http://schemas.android.com/tools"
+        xmlns:cardView="http://schemas.android.com/apk/res-auto"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        cardView:cardCornerRadius="4dp"
+        android:layout_gravity="center"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="10dp"
+        >
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:descendantFocusability="afterDescendants">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Materiels"
+                android:id="@+id/tvMateriel"
+                android:background="@color/accent_material_dark"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textAlignment="center"/>
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                >
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/txt1"
+                    android:layout_gravity="left"
+
+                    >
+                    <EditText android:id="@+id/txtNbrBracongoM"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint="Nombre Bracongo"
+
+                         />
+                </android.support.design.widget.TextInputLayout>
+                <requestFocus></requestFocus>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_alignBaseline="@id/txt1"
+                    android:layout_gravity="right"
+                    android:layout_toRightOf="@id/txt1"
+
+                    >
+                    <EditText android:id="@+id/txtNbrCasseBracongo"
+                        android:hint="Defectueux"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                         />
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+                <TextView
+                    android:id="@+id/labelSpinner1M"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="Etat"
+
+                    android:layout_weight="1"/>
+                <Spinner
+                    android:id="@+id/etatBracongoM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/choice_prompt"
+                    android:layout_alignBaseline="@id/labelSpinner1M"
+                    android:layout_toRightOf="@id/labelSpinner1M"
+                    android:drawSelectorOnTop="true"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+
+                >
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:id="@+id/txt2"
+                    android:layout_weight="1"
+                    android:layout_alignParentTop="true"
+                    >
+                    <EditText android:id="@+id/txtNbrConcuM"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+
+
+                        android:hint="Nombre Conc"
+                        />
+                </android.support.design.widget.TextInputLayout>
+                <requestFocus></requestFocus>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/txt2"
+                    android:layout_toRightOf="@id/txt2"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    >
+                    <EditText android:id="@+id/txtNbrCasseConcu"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+
+                        android:hint="Defectueux" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+                <TextView
+                    android:id="@+id/labelSpinner2M"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="Etat Conc"
+
+                    android:layout_weight="1"/>
+                <Spinner
+                    android:id="@+id/etatConcuM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/choice_prompt"
+                    android:layout_alignBaseline="@id/labelSpinner2M"
+                    android:layout_toRightOf="@id/labelSpinner2M"
+                    android:drawSelectorOnTop="true"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</FrameLayout>

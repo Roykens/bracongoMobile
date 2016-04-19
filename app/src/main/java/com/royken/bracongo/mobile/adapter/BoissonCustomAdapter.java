@@ -127,17 +127,7 @@ public class BoissonCustomAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                 }
             });
-            if(convertView == null){
-                Log.i("convertview1", "convertview est NULLLLLLLLLLLLLL");
-            }
-            else {
-                Log.i("convertview1", "convertview est BONNNNNNNNNNNNNNNNNNN");
-            }
-            if(holder == null){
-                Log.i("holder1", "holder est NULLLLLLLLLLLLLL");
-            }else {
-                Log.i("holder1", "holder est BONNNNNNNNNNNNNNNN");
-            }
+
             convertView.setTag(holder);
             convertView.setTag(R.id.txtPrix, holder.txt_Prix);
             convertView.setTag(R.id.txtStock, holder.txt_Stock);

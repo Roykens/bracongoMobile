@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.ListFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -118,7 +121,7 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
 
         // CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), R.layout.fragment_card_list);
 
-
+        setHasOptionsMenu(true);
         setListAdapter(boissonCustomAdapter);
         // TODO: Change Adapter to display your content
         //   setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
@@ -187,6 +190,24 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.planning_actualise, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.actualisePlanning:
+                Toast.makeText(getActivity().getApplicationContext(),"Du courage mon type",Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

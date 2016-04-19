@@ -231,6 +231,17 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
                             Log.i("TEST LISTES 1", projection.getNom() + " prix " + projection.getPrix() + " stock"+ projection.getStock());
                         }
                     }
+
+                    Fragment fragment = PlvFragment.newInstance();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.mainFrame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                    if (((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("PLVs");
+
+
+                    }
                 }
 
             }
@@ -265,6 +276,7 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
 
         if(boissons1 != null){
             boissonCustomAdapter = new BoissonCustomAdapter(getActivity(),boissons1);
+            listView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
             listView.setAdapter(boissonCustomAdapter);
 
             //getListView().setOnItemClickListener(this);

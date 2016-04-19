@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.royken.bracongo.mobile"
-        minSdkVersion 13
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -29,4 +29,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.0.+'
     compile 'com.google.android.gms:play-services:7.0.0'
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile 'com.jakewharton:butterknife:6.1.0'
 }

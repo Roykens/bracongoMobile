@@ -12,9 +12,19 @@ public class Reponse extends Application {
 
     private List<BoissonProjection> boissonProjections;
 
+    private List<PlvProjection> plvProjections;
+
+    private List<MaterielProjection> materielProjections;
+
     public Reponse(){
         if(boissonProjections == null) {
             boissonProjections = new ArrayList<>();
+        }
+        if(plvProjections == null){
+            plvProjections = new ArrayList<>();
+        }
+        if(materielProjections == null){
+            materielProjections = new ArrayList<>();
         }
     }
 
@@ -30,7 +40,27 @@ public class Reponse extends Application {
         boissonProjections.add(boissonProjection);
     }
 
+    public void addPlv(PlvProjection plvProjection){
+        plvProjections.add(plvProjection);
+    }
+
+    public void addMateriel(MaterielProjection materielProjection){
+        materielProjections.add(materielProjection);
+    }
+
     public void init(){
+
         boissonProjections = new ArrayList<>();
+        plvProjections = new ArrayList<>();
+        materielProjections = new ArrayList<>();
+
+    }
+
+    public List<PlvProjection> getPlvProjections() {
+        return plvProjections;
+    }
+
+    public void setPlvProjections(List<PlvProjection> plvProjections) {
+        this.plvProjections = plvProjections;
     }
 }

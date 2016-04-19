@@ -8,9 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.royken.bracongo.mobile.R;
 import com.royken.bracongo.mobile.entities.Boisson;
 import com.royken.bracongo.mobile.entities.PointDeVente;
@@ -59,6 +62,19 @@ public class PoinDeVenteCustomAdapter extends BaseAdapter {
             layout = (FrameLayout) convertView;
         }
 
+        ImageView img = (ImageView)layout.findViewById(R.id.image_view);
+        String firstLetter = String.valueOf(pointDeVentes.get(position).getNom().charAt(0));
+
+        ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+        // generate random color
+        int color = generator.getRandomColor();
+        //int color = generator.getRandomColor();
+
+        TextDrawable drawable = TextDrawable.builder()
+                .buildRoundRect(firstLetter, color,color); // radius in px
+
+        img.setImageDrawable(drawable);
+
         TextView tv_Nom = (TextView)layout.findViewById(R.id.nomPdv);
         tv_Nom.setText(pointDeVentes.get(position).getNom());
         TextView tv_Type = (TextView)layout.findViewById(R.id.typePdv);
@@ -78,9 +94,12 @@ public class PoinDeVenteCustomAdapter extends BaseAdapter {
         if(categorie.trim() == "Ag"){
             tv_Categorie.setBackgroundColor(Color.parseColor("#c0c0c0"));
         }
-        if(categorie.trim().equalsIgnoreCase("0r")){
+        if(!categorie.trim().equalsIgnoreCase("0r")){
             Log.i("rrrrrrrrrrrrrrrrrrrrr","J'ai trouve l'orrrrrrrrrrrrr");
             tv_Categorie.setBackgroundColor(Color.parseColor("#ffd700"));
+        }
+        else {
+            tv_Categorie.setBackgroundColor(Color.RED);
         }
         tv_Categorie.setText(categorie);
 

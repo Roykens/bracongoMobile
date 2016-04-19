@@ -2,6 +2,9 @@ package com.royken.bracongo.mobile;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.royken.bracongo.mobile.dao.*;
@@ -42,14 +46,22 @@ import java.net.URLEncoder;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener, PlvFragment.OnFragmentInteractionListener, MaterielFragment.OnFragmentInteractionListener{
+
+    public static final String PREFS_NAME = "com.royken.MyPrefsFile";
+    private boolean isValide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+       setSupportActionBar(toolbar);
+        ImageView img= (ImageView) findViewById(R.id.imageView);
+       // getActionBar().setIcon(R.drawable.user1);
+       // getSupportActionBar().setIcon(R.drawable.user1);
+        img.setImageResource(R.drawable.user1);
+       // img.setI;
 
   /*      FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -68,11 +80,26 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean hasLoggedIn = settings.getBoolean("com.royken.hasLoggedIn", false);
+        if(hasLoggedIn == false){
+            try{
+
+                AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+                if (androidNetworkUtility.isConnected(this)) {
+                    Log.i("Test Connection", "Connected.");
+                    new LongOperation().execute();
+                    new PlanningAsyncTask().execute();
+                } else {
+                    Log.v("Test Connecion", "Network not Available!");
+                }
+            }catch (Exception e){}
+        }
        // LongOperation longo = new LongOperation();
        // longo.execute();
       //  PlanningAsyncTask asc = new PlanningAsyncTask();
 
- /*       try{
+   /*     try{
 
             AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
             if (androidNetworkUtility.isConnected(this)) {
@@ -83,8 +110,8 @@ public class MainActivity extends AppCompatActivity
                 Log.v("Test Connecion", "Network not Available!");
             }
         }catch (Exception e){}
+    */
 
-*/
     }
 
     @Override
@@ -234,6 +261,7 @@ public class MainActivity extends AppCompatActivity
             PlvDao plvDao = new PlvDao(getApplicationContext());
             Log.i("", "getProducts ......");
            // ArrayList<Product> productList = null;
+            //HttpGet httpGet = new HttpGet("http://192.168.43.126:8080/bracongo/api/question");
             HttpGet httpGet = new HttpGet("http://10.0.2.2:8080/bracongo/api/question");
 
             //setting header to request for a JSON response
