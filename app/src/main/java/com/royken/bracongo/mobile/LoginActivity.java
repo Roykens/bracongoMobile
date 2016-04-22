@@ -188,7 +188,7 @@ public class LoginActivity extends Activity {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("com.royken.login", login);
                 editor.putString("com.royken.password",password);
-                editor.putBoolean("com.royken.hasLoggedIn",true);
+                //editor.putBoolean("com.royken.hasLoggedIn",true);
                 editor.commit();
                 Intent intent = new Intent(LoginActivity.this,
                         SplashScreen.class);
@@ -197,6 +197,7 @@ public class LoginActivity extends Activity {
                 LoginActivity.this.finish();
             }
             else {
+                Log.i("Connection...","Failllllllll");
                 Toast.makeText(getApplicationContext(),"Credential Error", Toast.LENGTH_LONG);
             }
 

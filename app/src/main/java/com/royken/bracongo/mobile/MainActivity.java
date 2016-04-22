@@ -46,10 +46,11 @@ import java.net.URLEncoder;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener, PlvFragment.OnFragmentInteractionListener, MaterielFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener, PlvFragment.OnFragmentInteractionListener, MaterielFragment.OnFragmentInteractionListener, QuestionFragment.OnFragmentInteractionListener{
 
     public static final String PREFS_NAME = "com.royken.MyPrefsFile";
     private boolean isValide;
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
         boolean hasLoggedIn = settings.getBoolean("com.royken.hasLoggedIn", false);
         if(hasLoggedIn == false){
             try{
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity
                     Log.i("Test Connection", "Connected.");
                     new LongOperation().execute();
                     new PlanningAsyncTask().execute();
+                    editor.putBoolean("com.royken.hasLoggedIn", true);
+                    editor.commit();
                 } else {
                     Log.v("Test Connecion", "Network not Available!");
                 }
@@ -386,6 +390,7 @@ public class MainActivity extends AppCompatActivity
         protected Void doInBackground(String... urls) {
           //  BoissonDao dao = new BoissonDao(getApplicationContext());
             PointDvao dao = new PointDvao(getApplicationContext());
+            dao.clear();
             Log.i("", "getProducts de planning......");
             // ArrayList<Product> productList = null;
             HttpGet httpGet = new HttpGet("http://10.0.2.2:8080/bracongo/api/pdv/551");
@@ -398,6 +403,10 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 JSONObject obj = new JSONObject(productJSONStr);
+                int idPln = obj.getInt("idPlanning");
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("com.royken.idPln", idPln);
+                editor.commit();
                 JSONArray pdvs = obj.getJSONArray("pointDeVentes");
 
                 for (int i = 0; i < pdvs.length(); i++) {

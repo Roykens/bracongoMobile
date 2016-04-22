@@ -13,15 +13,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.royken.bracongo.mobile.adapter.BoissonCustomAdapter;
 import com.royken.bracongo.mobile.adapter.PlvCustomAdapter;
 import com.royken.bracongo.mobile.dao.PlvDao;
 import com.royken.bracongo.mobile.entities.Plv;
-import com.royken.bracongo.mobile.entities.projection.BoissonProjection;
 import com.royken.bracongo.mobile.entities.projection.PlvProjection;
-import com.royken.bracongo.mobile.entities.projection.Reponse;
+import com.royken.bracongo.mobile.entities.projection.ReponseProjection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class PlvFragment extends Fragment implements AdapterView.OnItemClickList
     private List<Plv> plvs = new ArrayList<>();
     PlvCustomAdapter plvCustomAdapter;
 
-    private Reponse reponse;
+    private ReponseProjection reponseProjection;
     private OnFragmentInteractionListener mListener;
     private ListView listView;
 
@@ -86,11 +83,11 @@ public class PlvFragment extends Fragment implements AdapterView.OnItemClickList
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reponse = (Reponse) getActivity().getApplicationContext();
+                reponseProjection = (ReponseProjection) getActivity().getApplicationContext();
                 List<PlvProjection> projections = plvCustomAdapter.getPlvProjections();
                 if (projections.size() > 0) {
                     for (PlvProjection projection : projections) {
-                        reponse.addPlv(projection);
+                        reponseProjection.addPlv(projection);
                         Log.i("PLVS", projection.getNom() +" Nombre brac " +projection.getNombreBrac()+ " Nombre Conc " + projection.getNombreConc() + "Etat Brac " + projection.getEtatBrac()+ " Etat Conc " + projection.getEtatConc());
                     }
                 }

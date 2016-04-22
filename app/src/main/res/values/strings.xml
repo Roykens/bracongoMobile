@@ -14,4 +14,10 @@
         <item>Bo</item>
         <item>TB</item>
     </string-array>
+
+    <string name="choice_prompt2">SRD</string>
+    <string-array name="choices2">
+        <item>OUI</item>
+        <item>NON</item>
+    </string-array>
 </resources>

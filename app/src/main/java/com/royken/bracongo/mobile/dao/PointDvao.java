@@ -109,7 +109,7 @@ public class PointDvao {
     }
 
     public void clear(){
-        String query = "DELETE * FROM " +TABLE_PDV; ;
+        String query = "DELETE  FROM " +TABLE_PDV; ;
         db.execSQL(query);
     }
 

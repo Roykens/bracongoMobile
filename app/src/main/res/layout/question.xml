@@ -1,26 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.royken.bracongo.mobile.TwoFragment" android:descendantFocusability="afterDescendants">
-    <android.support.v7.widget.CardView  xmlns:android="http://schemas.android.com/apk/res/android"  xmlns:tools="http://schemas.android.com/tools"
-        xmlns:cardView="http://schemas.android.com/apk/res-auto"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:layout_marginBottom="10dp"
-        >
+    android:layout_height="match_parent" tools:context="com.royken.bracongo.mobile.QuestionFragment" android:descendantFocusability="afterDescendants">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingLeft="0dp"
+
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:paddingRight="0dp"
+            android:descendantFocusability="afterDescendants">
+
+            <android.support.v7.widget.CardView  xmlns:android="http://schemas.android.com/apk/res/android"  xmlns:tools="http://schemas.android.com/tools"
+                xmlns:cardView="http://schemas.android.com/apk/res-auto"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                cardView:cardCornerRadius="4dp"
+                android:layout_gravity="center"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="10dp"
+                >
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical"
                 android:paddingLeft="15dp"
 
                 android:paddingTop="0dp"
                 android:paddingBottom="0dp"
                 android:paddingRight="15dp"
-                android:background="@drawable/card_background_selector"
-
                 android:descendantFocusability="afterDescendants">
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/txtEmballageBrac"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Emballage Bracongo"/>
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/txtEmballageConc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Emballage Bralima"/>
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/txtjourPassageFDVBrac"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Dernier passage FDV Bracongo"/>
+            </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+            <TextView
+                android:id="@+id/labelSpinner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="SRD Bracongo"
+                android:layout_weight="1"/>
+            <Spinner
+                android:id="@+id/srdBrac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:prompt="@string/choice_prompt2"
+                android:layout_alignBaseline="@id/labelSpinner2"
+                android:layout_toRightOf="@id/labelSpinner2"
+                android:drawSelectorOnTop="true"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+
+                <EditText android:id="@+id/txtHeurePassageSrdBrac"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Heure passage FDV Bracongo"/>
+
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/txtjourPassageFDVBral"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Dernier passage FDV Bralima"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+                <TextView
+                    android:id="@+id/labelSpinner3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="SRD Bralima"
+                    android:layout_weight="1"/>
+                <Spinner
+                    android:id="@+id/srdBral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/choice_prompt2"
+                    android:layout_alignBaseline="@id/labelSpinner3"
+                    android:layout_toRightOf="@id/labelSpinner3"
+                    android:drawSelectorOnTop="true"
+                    android:layout_weight="1"
+                    />
             </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+                <EditText android:id="@+id/txtHeurePassageSrdBral"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Heure passage FDV Bralima"/>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/txtphn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Nombre PHN"/>
+            </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+                <TextView
+                    android:id="@+id/labelSpinner4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="Fifo"
+                    android:layout_weight="1"/>
+                <Spinner
+                    android:id="@+id/fifo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/choice_prompt2"
+                    android:layout_alignBaseline="@id/labelSpinner4"
+                    android:layout_toRightOf="@id/labelSpinner4"
+                    android:drawSelectorOnTop="true"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+            </android.support.v7.widget.CardView>
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_question_suivant"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:padding="12dp"
+        android:textAlignment="center"
+        android:text="Suivant"/>
+
+</LinearLayout>
+</ScrollView>
 </FrameLayout>

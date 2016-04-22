@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.royken.bracongo.mobile.entities.PointDeVente;
+import com.royken.bracongo.mobile.entities.projection.ReponseProjection;
 import com.royken.bracongo.mobile.util.GMapV2Direction;
 import com.royken.bracongo.mobile.util.GMapV2DirectionAsyncTask;
 
@@ -103,6 +104,8 @@ public class PointDeVenteFragment extends Fragment{
             type = getArguments().getString(ARG_TYPE);
             regime = getArguments().getString(ARG_REGIME);
             categorie = getArguments().getString(ARG_CATEGORIE);
+            ReponseProjection reponseProjection = (ReponseProjection) getActivity().getApplicationContext();
+            reponseProjection.setIdPdv(ids);
         }
     }
 
@@ -154,7 +157,8 @@ public class PointDeVenteFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Fragment fragment = TwoFragment.newInstance(true,true,null);
+               //Fragment fragment = TwoFragment.newInstance(true,true,null);
+                Fragment fragment = QuestionFragment.newInstance("","");
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.mainFrame, fragment);
                 ft.addToBackStack(null);
@@ -214,7 +218,7 @@ public class PointDeVenteFragment extends Fragment{
                     Document doc = (Document) msg.obj;
                     GMapV2Direction md = new GMapV2Direction();
                     ArrayList<LatLng> directionPoint = md.getDirection(doc);
-                    PolylineOptions rectLine = new PolylineOptions().width(15).color(getActivity().getResources().getColor(R.color.colorBracongo));
+                    PolylineOptions rectLine = new PolylineOptions().width(5).color(getActivity().getResources().getColor(R.color.accent_material_dark));
 
                     for (int i = 0; i < directionPoint.size(); i++) {
                         rectLine.add(directionPoint.get(i));

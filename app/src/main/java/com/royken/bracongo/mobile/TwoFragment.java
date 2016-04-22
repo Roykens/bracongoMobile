@@ -1,14 +1,10 @@
 package com.royken.bracongo.mobile;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,35 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.royken.bracongo.mobile.adapter.BoissonCustomAdapter;
 import com.royken.bracongo.mobile.dao.BoissonDao;
-import com.royken.bracongo.mobile.dummy.DummyContent;
 import com.royken.bracongo.mobile.entities.Boisson;
 import com.royken.bracongo.mobile.entities.projection.BoissonProjection;
-import com.royken.bracongo.mobile.entities.projection.Reponse;
-import com.royken.bracongo.mobile.util.WebserviceUtil;
+import com.royken.bracongo.mobile.entities.projection.ReponseProjection;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +52,7 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
     private boolean mBiere;
     private boolean mbBacongo;
     private List<BoissonProjection> boissonProjections;
-    private Reponse reponse;
+    private ReponseProjection reponseProjection;
     private OnFragmentInteractionListener mListener;
 
     private ListView listView;
@@ -162,7 +139,7 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reponse  = (Reponse)getActivity().getApplicationContext();
+                reponseProjection = (ReponseProjection)getActivity().getApplicationContext();
 
                // Log.i("TOTAL","J'ai au total "+ boissonProjections.size() +" 2");
                 String title = "";
@@ -171,7 +148,7 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
                     Log.i("TOTAL","J'ai au total "+ projections.size() +"2");
                     if (projections.size() > 0) {
                         for (BoissonProjection projection:projections){
-                            reponse.addBoisson(projection);
+                            reponseProjection.addBoisson(projection);
 
                         }
                     }
@@ -187,7 +164,7 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
                     Log.i("TOTAL","J'ai au total "+ projections.size() +" 3");
                     if (projections.size() > 0) {
                         for (BoissonProjection projection:projections){
-                            reponse.addBoisson(projection);
+                            reponseProjection.addBoisson(projection);
 
                         }
                     }
@@ -203,7 +180,7 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
                     Log.i("TOTAL","J'ai au total "+ projections.size() +" 4");
                     if (projections.size() > 0) {
                         for (BoissonProjection projection:projections){
-                            reponse.addBoisson(projection);
+                            reponseProjection.addBoisson(projection);
 
                         }
                     }
@@ -220,11 +197,11 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
                     Log.i("TOTAL","J'ai au total "+ projections.size() +" 5");
                     if (projections.size() > 0) {
                         for (BoissonProjection projection:projections){
-                            reponse.addBoisson(projection);
+                            reponseProjection.addBoisson(projection);
 
                         }
                     }
-                    List<BoissonProjection> boissonProjections1 = reponse.getBoissonProjections();
+                    List<BoissonProjection> boissonProjections1 = reponseProjection.getBoissonProjections();
                     Log.i("TOTAL","J'ai au total "+ boissonProjections1.size());
                     if (boissonProjections1.size() > 0) {
                         for (BoissonProjection projection:boissonProjections1){

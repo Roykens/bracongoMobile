@@ -1,5 +1,8 @@
 package com.royken.bracongo.mobile.entities.projection;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,20 +10,36 @@ import java.io.Serializable;
  */
 public class MaterielProjection implements Serializable {
 
+    @Expose
+    @SerializedName("idServeur")
     private int idServeur;
 
+    @Expose
+    @SerializedName("nom")
     private String nom;
 
+    @Expose
+    @SerializedName("nombreBrac")
     private String nombreBrac;
 
+    @Expose
+    @SerializedName("EtatBrac")
     private String EtatBrac;
 
+    @Expose
+    @SerializedName("nombreCon")
     private String nombreCon;
 
+    @Expose
+    @SerializedName("EtatConc")
     private String EtatConc;
 
+    @Expose
+    @SerializedName("nombreCasseBrac")
     private String nombreCasseBrac;
 
+    @Expose
+    @SerializedName("nombreCasseConc")
     private String nombreCasseConc;
 
     public MaterielProjection(int idServeur, String nom, String nombreBrac, String etatBrac, String nombreCon, String etatConc, String nombreCasseBrac, String nombreCasseConc) {
@@ -99,5 +118,19 @@ public class MaterielProjection implements Serializable {
 
     public void setNombreCasseConc(String nombreCasseConc) {
         this.nombreCasseConc = nombreCasseConc;
+    }
+
+    @Override
+    public String toString() {
+        return "MaterielProjection{" +
+                "idServeur=" + idServeur +
+                ", nom='" + nom + '\'' +
+                ", nombreBrac='" + nombreBrac + '\'' +
+                ", EtatBrac='" + EtatBrac + '\'' +
+                ", nombreCon='" + nombreCon + '\'' +
+                ", EtatConc='" + EtatConc + '\'' +
+                ", nombreCasseBrac='" + nombreCasseBrac + '\'' +
+                ", nombreCasseConc='" + nombreCasseConc + '\'' +
+                '}';
     }
 }

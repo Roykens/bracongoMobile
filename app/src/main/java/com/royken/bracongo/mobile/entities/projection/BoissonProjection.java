@@ -4,6 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -12,10 +15,20 @@ import java.io.Serializable;
 
 public class BoissonProjection implements Parcelable, Serializable{
 
+    @Expose
+    @SerializedName("nom")
     private String nom;
+    @Expose
+    @SerializedName("idSrveur")
     private int idSrveur;
+    @Expose
+    @SerializedName("prix")
     private String prix;
+    @Expose
+    @SerializedName("stock")
     private String stock;
+    @Expose
+    @SerializedName("disponible")
     private boolean disponible;
 
     public BoissonProjection() {
@@ -82,15 +95,6 @@ public class BoissonProjection implements Parcelable, Serializable{
         this.disponible = disponible;
     }
 
- /*   public BoissonProjection(Parcel in){
-        String[] data = new String[5];
-
-        in.readStringArray(data);
-        this.id = data[0];
-        this.name = data[1];
-        this.grade = data[2];
-    }
-*/
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         Log.v("Boisson", "writeToParcel..." + flags);
@@ -116,5 +120,16 @@ public class BoissonProjection implements Parcelable, Serializable{
     @Override
     public int describeContents(){
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "BoissonProjection{" +
+                "nom='" + nom + '\'' +
+                ", idSrveur=" + idSrveur +
+                ", prix='" + prix + '\'' +
+                ", stock='" + stock + '\'' +
+                ", disponible=" + disponible +
+                '}';
     }
 }

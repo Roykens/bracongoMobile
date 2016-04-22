@@ -1,5 +1,8 @@
 package com.royken.bracongo.mobile.entities.projection;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,16 +10,28 @@ import java.io.Serializable;
  */
 public class PlvProjection implements Serializable{
 
+    @Expose
+    @SerializedName("nom")
     private String nom;
 
+    @Expose
+    @SerializedName("idServeur")
     private int idServeur;
 
+    @Expose
+    @SerializedName("nombreBrac")
     private String nombreBrac;
 
+    @Expose
+    @SerializedName("nombreConc")
     private String nombreConc;
 
+    @Expose
+    @SerializedName("etatBrac")
     private String etatBrac;
 
+    @Expose
+    @SerializedName("etatConc")
     private String etatConc;
 
     public PlvProjection() {
@@ -85,5 +100,17 @@ public class PlvProjection implements Serializable{
 
     public void setEtatConc(String etatConc) {
         this.etatConc = etatConc;
+    }
+
+    @Override
+    public String toString() {
+        return "PlvProjection{" +
+                "nom='" + nom + '\'' +
+                ", idServeur=" + idServeur +
+                ", nombreBrac='" + nombreBrac + '\'' +
+                ", nombreConc='" + nombreConc + '\'' +
+                ", etatBrac='" + etatBrac + '\'' +
+                ", etatConc='" + etatConc + '\'' +
+                '}';
     }
 }

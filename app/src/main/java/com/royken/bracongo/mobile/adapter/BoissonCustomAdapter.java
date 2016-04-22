@@ -124,7 +124,7 @@ public class BoissonCustomAdapter extends BaseAdapter {
                     int getPosition = (Integer) buttonView.getTag();
                     boissonProjections.get(getPosition).setDisponible(buttonView.isChecked());
 
-                    notifyDataSetChanged();
+                    //notifyDataSetChanged();
                 }
             });
 
