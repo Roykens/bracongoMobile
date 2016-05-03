@@ -212,7 +212,7 @@ public class PointDeVenteFragment extends Fragment{
     }
 
     protected void route(LatLng sourcePosition, LatLng destPosition, String mode) {
-        final Handler handler = new Handler() {
+        final  Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 try {
                     Document doc = (Document) msg.obj;

@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class PlvProjection implements Serializable{
 
-    @Expose
+    @Expose(serialize = false)
     @SerializedName("nom")
     private String nom;
 

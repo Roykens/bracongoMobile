@@ -2,24 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_camera"
-            android:title="Import" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools" />
+        <item android:id="@+id/nav_accueil" android:icon="@android:drawable/ic_menu_camera"
+            android:title="Accueil" />
         <item android:id="@+id/nav_planning" android:icon="@android:drawable/ic_menu_today"
             android:title="Planning" />
+        <item android:id="@+id/nav_my_map" android:icon="@android:drawable/ic_menu_mapmode"
+            android:title="Ma position" />
+        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
+            android:title="Paramètres" />
+
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Données">
         <menu>
-            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
-                android:title="Share" />
-            <item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"
-                android:title="Send" />
+            <item android:id="@+id/nav_boisson" android:icon="@android:drawable/ic_menu_share"
+                android:title="Boisson" />
+            <item android:id="@+id/nav_plv" android:icon="@android:drawable/ic_menu_send"
+                android:title="Plv" />
+            <item android:id="@+id/nav_mat" android:icon="@android:drawable/ic_menu_send"
+                android:title="Materiel" />
         </menu>
     </item>
 

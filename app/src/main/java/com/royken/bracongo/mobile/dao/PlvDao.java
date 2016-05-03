@@ -38,6 +38,11 @@ public class PlvDao {
         }
     }
 
+    public void clear(){
+        String query = "DELETE  FROM " +TABLE_PLV; ;
+        db.execSQL(query);
+    }
+
     public long insertPlv(Plv plv){
         ContentValues values = new ContentValues();
         values.put(COL_PIDS, plv.getIdServeur());

@@ -1,5 +1,8 @@
 package com.royken.bracongo.mobile.entities;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,14 +10,27 @@ import java.io.Serializable;
  */
 public class Boisson implements Serializable {
 
+    @Expose(serialize = false, deserialize = false)
     private int id;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("idFormatBoisson")
     private int idServeur;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("prix")
+    private int prix;
+
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("nomFormat")
     private String nom;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("bracongo")
     private boolean isBracongo;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("biere")
     private boolean isBi;
 
     public int getId() {
@@ -55,6 +71,22 @@ public class Boisson implements Serializable {
 
     public void setIsBi(boolean isBi) {
         this.isBi = isBi;
+    }
+
+    public int getPrix() {
+        return prix;
+    }
+
+    public void setPrix(int prix) {
+        this.prix = prix;
+    }
+
+    public boolean isBracongo() {
+        return isBracongo;
+    }
+
+    public boolean isBi() {
+        return isBi;
     }
 
     @Override

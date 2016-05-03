@@ -39,6 +39,11 @@ public class MaterielDao {
         }
     }
 
+    public void clear(){
+        String query = "DELETE  FROM " +TABLE_MATERIEL; ;
+        db.execSQL(query);
+    }
+
     public long insertMateriel(Materiel materiel){
         ContentValues values = new ContentValues();
         values.put(COL_MIDS, materiel.getIdServeur());

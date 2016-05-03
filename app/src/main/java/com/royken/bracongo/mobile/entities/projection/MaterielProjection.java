@@ -14,7 +14,7 @@ public class MaterielProjection implements Serializable {
     @SerializedName("idServeur")
     private int idServeur;
 
-    @Expose
+    @Expose(serialize = false)
     @SerializedName("nom")
     private String nom;
 

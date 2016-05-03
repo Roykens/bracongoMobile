@@ -215,7 +215,8 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
                     ft.addToBackStack(null);
                     ft.commit();
                     if (((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
-                        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("PLVs");
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Question");
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("PLVS");
 
 
                     }
@@ -258,7 +259,19 @@ public class TwoFragment extends Fragment implements AdapterView.OnItemClickList
 
             //getListView().setOnItemClickListener(this);
         }
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(title);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Question");
+        if(mbBacongo && mBiere){
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("BI Bracongo");
+        }
+        if(mbBacongo && !mBiere){
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("BG Bracongo");
+        }
+        if(!mbBacongo && mBiere){
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("BI Bralima");
+        }
+        if(!mbBacongo && !mBiere){
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("BG Bralima");
+        }
 
     }
 

@@ -13,6 +13,18 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#4B0082</item>
+        <item name="colorControlActivated">#F433FF</item>
+    </style>
+    <style name="MyButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#4B0082</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+    </style>
 
+    <style name="MyButton2" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#4B0082</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
 
 </resources>

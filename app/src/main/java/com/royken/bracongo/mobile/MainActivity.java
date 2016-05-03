@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Comment;
 
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
@@ -46,11 +49,13 @@ import java.net.URLEncoder;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener, PlvFragment.OnFragmentInteractionListener, MaterielFragment.OnFragmentInteractionListener, QuestionFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener, PlvFragment.OnFragmentInteractionListener, MaterielFragment.OnFragmentInteractionListener, QuestionFragment.OnFragmentInteractionListener, BoissonListFragment.OnFragmentInteractionListener, MaterielListFragment.OnFragmentInteractionListener, PlvListFragment.OnFragmentInteractionListener, AccueilFragment.OnFragmentInteractionListener, ActionFragment.OnFragmentInteractionListener, CommentFragment.OnFragmentInteractionListener,ParametreFragment.OnFragmentInteractionListener{
 
     public static final String PREFS_NAME = "com.royken.MyPrefsFile";
     private boolean isValide;
-    SharedPreferences settings;
+    SharedPreferences settings ;
+    String login;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,10 @@ public class MainActivity extends AppCompatActivity
        // getActionBar().setIcon(R.drawable.user1);
        // getSupportActionBar().setIcon(R.drawable.user1);
         img.setImageResource(R.drawable.user1);
-       // img.setI;
+     //   ImageView iv = (ImageView) findViewById(R.id.back);
+       // iv.setColorFilter(Color.argb(150, 118, 118, 188), PorterDuff.Mode.SRC_ATOP);
+
+        // img.setI;
 
   /*      FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +95,8 @@ public class MainActivity extends AppCompatActivity
         if(hasLoggedIn == false){
             try{
 
+                login = settings.getString("com.royken.login","");
+                password = settings.getString("com.royken.password","");
                 AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
                 if (androidNetworkUtility.isConnected(this)) {
                     Log.i("Test Connection", "Connected.");
@@ -159,48 +169,47 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment ;
         String title  = "Toto";
 
-        if (id == R.id.nav_camara) {
+        if (id == R.id.nav_accueil) {
             // Handle the camera action
-            title = "One";
-            fragment = BlankFragment.newInstance("one", "two");
+          /*  title = "Accueil";
+            fragment = AccueilFragment.newInstance();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            //android.app.FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-          //  ft.remove();
+            ft.replace(R.id.mainFrame, fragment);
+            ft.addToBackStack(null);
+           */ //ft.
+            //ft.commit();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else if(id == R.id.nav_boisson){
+            fragment = BoissonListFragment.newInstance();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, fragment);
+            ft.addToBackStack(null);
+            ft.commit();
 
-            ft.replace(R.id.mainFrame, fragment);
-            ft.addToBackStack(null);
-            //ft.
-            ft.commit();
-        } else if (id == R.id.nav_gallery) {
-           // title = "Two";
-            fragment = TwoFragment.newInstance("BONJOUR","");
+        }else if(id == R.id.nav_mat){
+            fragment = MaterielListFragment.newInstance();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment);
             ft.addToBackStack(null);
+            ft.commit();
 
-            ft.commit();
-        } else if (id == R.id.nav_slideshow) {
-            title = "List";
-            fragment = CardListFragment2.newInstance("one","two");
+        }else if(id == R.id.nav_plv){
+            fragment = PlvListFragment.newInstance();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment);
             ft.addToBackStack(null);
             ft.commit();
-        } else if (id == R.id.nav_manage) {
-            title = "Map";
+
+        }
+
+        else if (id == R.id.nav_my_map) {
+            title = "Ma position";
             fragment = MapFragment.newInstance("","");
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment);
             ft.addToBackStack(null);
             ft.commit();
-
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            fragment = MapFragment.newInstance("one","two");
-           // MapFragment fragment = new MapFragment();
-            transaction.replace(R.id.mainFrame, fragment);
-            transaction.commit();
-
         }
         else if(id == R.id.nav_planning){
             title = "Planning";
@@ -209,10 +218,15 @@ public class MainActivity extends AppCompatActivity
             ft.replace(R.id.mainFrame,fragment);
             ft.addToBackStack(null);
             ft.commit();
-        }else if (id == R.id.nav_share) {
+        }
 
-        } else if (id == R.id.nav_send) {
-
+        else if(id == R.id.nav_manage){
+            title = "Paramètres";
+            fragment = ParametreFragment.newInstance();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
         }
 
         if (getSupportActionBar() != null) {
@@ -266,7 +280,7 @@ public class MainActivity extends AppCompatActivity
             Log.i("", "getProducts ......");
            // ArrayList<Product> productList = null;
             //HttpGet httpGet = new HttpGet("http://192.168.43.126:8080/bracongo/api/question");
-            HttpGet httpGet = new HttpGet("http://10.0.2.2:8080/bracongo/api/question");
+            HttpGet httpGet = new HttpGet("http://192.168.1.110:8080/bracongo/api/question");
 
             //setting header to request for a JSON response
             httpGet.setHeader("Accept", "application/json");
@@ -286,6 +300,7 @@ public class MainActivity extends AppCompatActivity
                     JSONObject object = biBrac.getJSONObject(i);
                     Boisson boisson = new Boisson();
                     boisson.setIdServeur(object.getInt("idFormatBoisson"));
+                    boisson.setPrix(object.getInt("prix"));
                     boisson.setNom(object.getString("nomFormat"));
                     boisson.setIsBracongo(true);
                     boisson.setIsBi(true);
@@ -297,6 +312,7 @@ public class MainActivity extends AppCompatActivity
                     Boisson boisson = new Boisson();
                     boisson.setIdServeur(object.getInt("idFormatBoisson"));
                     boisson.setNom(object.getString("nomFormat"));
+                    boisson.setPrix(object.getInt("prix"));
                     boisson.setIsBracongo(true);
                     boisson.setIsBi(false);
                     dao.insertBoisson(boisson);
@@ -307,6 +323,7 @@ public class MainActivity extends AppCompatActivity
                     Boisson boisson = new Boisson();
                     boisson.setIdServeur(object.getInt("idFormatBoisson"));
                     boisson.setNom(object.getString("nomFormat"));
+                    boisson.setPrix(object.getInt("prix"));
                     boisson.setIsBracongo(false);
                     boisson.setIsBi(true);
                     dao.insertBoisson(boisson);
@@ -317,6 +334,7 @@ public class MainActivity extends AppCompatActivity
                     Boisson boisson = new Boisson();
                     boisson.setIdServeur(object.getInt("idFormatBoisson"));
                     boisson.setNom(object.getString("nomFormat"));
+                    boisson.setPrix(object.getInt("prix"));
                     boisson.setIsBracongo(false);
                     boisson.setIsBi(false);
                     dao.insertBoisson(boisson);
@@ -332,7 +350,6 @@ public class MainActivity extends AppCompatActivity
                 }
                 for (int i = 0; i < materiels.length(); i++) {
                     JSONObject object = materiels.getJSONObject(i);
-
                     Materiel materiel = new Materiel();
                     materiel.setNom(object.getString("nom"));
                     materiel.setIdServeur(object.getInt("id"));
@@ -393,7 +410,8 @@ public class MainActivity extends AppCompatActivity
             dao.clear();
             Log.i("", "getProducts de planning......");
             // ArrayList<Product> productList = null;
-            HttpGet httpGet = new HttpGet("http://10.0.2.2:8080/bracongo/api/pdv/551");
+            String url = "http://192.168.1.110:8080/bracongo/api/pdv/planning/"+login.trim()+"/"+password.trim();
+            HttpGet httpGet = new HttpGet(url);
 
             //setting header to request for a JSON response
             httpGet.setHeader("Accept", "application/json");
@@ -408,6 +426,7 @@ public class MainActivity extends AppCompatActivity
                 editor.putInt("com.royken.idPln", idPln);
                 editor.commit();
                 JSONArray pdvs = obj.getJSONArray("pointDeVentes");
+                Log.i("Taillleeee", pdvs.length()+"");
 
                 for (int i = 0; i < pdvs.length(); i++) {
                     JSONObject object = pdvs.getJSONObject(i);

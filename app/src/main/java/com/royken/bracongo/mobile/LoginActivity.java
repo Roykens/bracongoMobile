@@ -200,16 +200,14 @@ public class LoginActivity extends Activity {
                 Log.i("Connection...","Failllllllll");
                 Toast.makeText(getApplicationContext(),"Credential Error", Toast.LENGTH_LONG);
             }
-
-
-        }
+    }
 
         @Override
         protected Boolean doInBackground(String... params) {
             //Do all your slow tasks here but dont set anything on UI
             //ALL ui activities on the main thread
 
-            HttpGet httpGet = new HttpGet("http://10.0.2.2:8080/bracongo/api/authenticate/"+login.trim()+"/"+password.trim());
+            HttpGet httpGet = new HttpGet("http://192.168.1.110:8080/bracongo/api/authenticate/"+login.trim()+"/"+password.trim());
 
             //setting header to request for a JSON response
             httpGet.setHeader("Accept", "application/json");

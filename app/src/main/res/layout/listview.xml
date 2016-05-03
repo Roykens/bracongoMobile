@@ -9,7 +9,8 @@
     android:paddingRight="0dp"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
-    android:background="#ffffff">
+    android:background="#AA000000"
+    android:textColor="#ffffffff">
 
     <ListView
         android:id="@+id/card_listView"
@@ -17,6 +18,8 @@
         android:layout_height="wrap_content"
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent"
+        android:background="#AA000000"
+        android:textColor="#ffffffff"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:layout_marginLeft="0dp"

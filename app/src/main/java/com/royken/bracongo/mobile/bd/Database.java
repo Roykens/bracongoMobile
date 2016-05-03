@@ -13,6 +13,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String COL_BID = "id";
     private static final String COL_BIDS = "ids";
     private static final String COL_BNAME = "nom";
+    private static final String COL_BPRIX = "prix";
     private static final String COL_BISBRAC = "isBracongo";
     private static final String COL_BISBI = "isBi";
 
@@ -38,7 +39,7 @@ public class Database extends SQLiteOpenHelper {
     private static String COL_PDCATEGORIE = "categorie";
 
 
-    private static final String CREATE_TABLE_BOISSON = "CREATE TABLE " + TABLE_BOISSON + " ( "+ COL_BID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COL_BIDS + " INTEGER, "+ COL_BNAME + " TEXT NOT NULL, "+COL_BISBRAC + " INTEGER,"+COL_BISBI + " INTEGER);";
+    private static final String CREATE_TABLE_BOISSON = "CREATE TABLE " + TABLE_BOISSON + " ( "+ COL_BID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COL_BIDS + " INTEGER, "+ COL_BNAME + " TEXT NOT NULL, "+COL_BPRIX + " INTEGER, "  +COL_BISBRAC + " INTEGER, "+COL_BISBI + " INTEGER);";
 
     private static final String CREATE_TABLE_MATERIEL = "CREATE TABLE " + TABLE_MATERIEL + " ( "+ COL_MID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COL_MIDS + " INTEGER, "+ COL_MNAME + " TEXT NOT NULL);";
 

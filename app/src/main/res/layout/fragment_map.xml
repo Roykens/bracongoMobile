@@ -6,7 +6,23 @@
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.7"
         class="com.google.android.gms.maps.SupportMapFragment" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:textColor="#ffffff"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1" />
+
+    <TextView
+        android:layout_below="@+id/location"
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:textColor="#ffffff"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2" />
 
 </FrameLayout>

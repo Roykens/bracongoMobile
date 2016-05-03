@@ -1,5 +1,8 @@
 package com.royken.bracongo.mobile.entities;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,10 +10,15 @@ import java.io.Serializable;
  */
 public class Materiel implements Serializable{
 
+    @Expose(serialize = false, deserialize = false)
     private int id;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("id")
     private int idServeur;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("nom")
     private String nom;
 
     public int getId() {

@@ -15,7 +15,7 @@ import java.io.Serializable;
 
 public class BoissonProjection implements Parcelable, Serializable{
 
-    @Expose
+    @Expose(serialize = false)
     @SerializedName("nom")
     private String nom;
     @Expose

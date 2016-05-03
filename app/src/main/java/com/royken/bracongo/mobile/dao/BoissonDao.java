@@ -24,9 +24,11 @@ public class BoissonDao {
     private static final String COL_BNAME = "nom";
     private static final int NUM_COL_BNAME = 2;
     private static final String COL_BISBRAC = "isBracongo";
-    private static final int NUM_COL_BISBRAC = 3;
+    private static final int NUM_COL_BISBRAC = 4;
     private static final String COL_BISBI = "isBi";
-    private static final int NUM_COL_BISBI = 4;
+    private static final int NUM_COL_BISBI = 5;
+    private static final String COL_BPRIX = "prix";
+    private static final int NUL_COL_BPRIX = 3;
 
     private Context context;
     private DatabaseConnection connection;
@@ -43,6 +45,11 @@ public class BoissonDao {
         }
     }
 
+    public void clear(){
+        String query = "DELETE  FROM " +TABLE_BOISSON; ;
+        db.execSQL(query);
+    }
+
     public long insertBoisson(Boisson boisson) {
         //   connection.open();
         if (db == null) {
@@ -53,6 +60,7 @@ public class BoissonDao {
         ContentValues values = new ContentValues();
         values.put(COL_BIDS, boisson.getIdServeur());
         values.put(COL_BNAME, boisson.getNom());
+        values.put(COL_BPRIX, boisson.getPrix());
         if (boisson.getIsBi()) {
             values.put(COL_BISBI, 1);
         } else {
@@ -69,7 +77,7 @@ public class BoissonDao {
     }
 
     public Boisson getBoissonById(int id) {
-        Cursor c = db.query(TABLE_BOISSON, new String[]{COL_BID, COL_BIDS, COL_BNAME, COL_BISBRAC, COL_BISBI}, COL_BID + " = \"" + id + "\"", null, null, null, null);
+        Cursor c = db.query(TABLE_BOISSON, new String[]{COL_BID, COL_BIDS, COL_BNAME,COL_BPRIX ,COL_BISBRAC, COL_BISBI}, COL_BID + " = \"" + id + "\"", null, null, null, null);
         return cursorToBoisson(c);
     }
 
@@ -80,15 +88,18 @@ public class BoissonDao {
         int id2;
         int isBra;
         int isBi;
+        int prix;
         String nom;
         for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
             Boisson boisson = new Boisson();
             id1 = mCursor.getInt(0);
             id2 = mCursor.getInt(1);
             nom = mCursor.getString(2);
-            isBra = mCursor.getInt(3);
-            isBi = mCursor.getInt(4);
+            prix = mCursor.getInt(3);
+            isBra = mCursor.getInt(4);
+            isBi = mCursor.getInt(5);
             boisson.setNom(nom);
+            boisson.setPrix(prix);
             boisson.setIdServeur(id2);
             boisson.setId(id1);
             if (isBra == 1) {
@@ -118,15 +129,18 @@ public class BoissonDao {
         int id2;
         int isBra;
         int isBi;
+        int prix;
         String nom;
         for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
             Boisson boisson = new Boisson();
             id1 = mCursor.getInt(0);
             id2 = mCursor.getInt(1);
             nom = mCursor.getString(2);
-            isBra = mCursor.getInt(3);
-            isBi = mCursor.getInt(4);
+            prix = mCursor.getInt(3);
+            isBra = mCursor.getInt(4);
+            isBi = mCursor.getInt(5);
             boisson.setNom(nom);
+            boisson.setPrix(prix);
             boisson.setIdServeur(id2);
             boisson.setId(id1);
             if (isBra == 1) {
@@ -155,6 +169,7 @@ public class BoissonDao {
         boisson.setId(c.getInt(NUM_COL_BID));
         boisson.setIdServeur(c.getInt(NUM_COL_BIDS));
         boisson.setNom(c.getString(NUM_COL_BNAME));
+        boisson.setPrix(c.getInt(NUL_COL_BPRIX));
         int bi = c.getInt(NUM_COL_BISBI);
         if (bi == 1) {
             boisson.setIsBi(true);

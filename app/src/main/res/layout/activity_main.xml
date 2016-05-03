@@ -6,6 +6,8 @@
     android:fitsSystemWindows="true" tools:openDrawer="start"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp">
 

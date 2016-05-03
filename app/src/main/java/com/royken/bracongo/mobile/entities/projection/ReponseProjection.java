@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.royken.bracongo.mobile.entities.Action;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,6 +80,10 @@ public class ReponseProjection extends Application {
     @SerializedName("materielProjections")
     private List<MaterielProjection> materielProjections;
 
+    @Expose
+    @SerializedName("action")
+    private Action action;
+
 
 
     public ReponseProjection(){
@@ -118,6 +123,7 @@ public class ReponseProjection extends Application {
         boissonProjections = new ArrayList<>();
         plvProjections = new ArrayList<>();
         materielProjections = new ArrayList<>();
+        action = new Action();
 
     }
 
@@ -241,5 +247,11 @@ public class ReponseProjection extends Application {
         this.nombrePhn = nombrePhn;
     }
 
+    public Action getAction() {
+        return action;
+    }
 
+    public void setAction(Action action) {
+        this.action = action;
+    }
 }

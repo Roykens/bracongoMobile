@@ -1,21 +1,34 @@
 package com.royken.bracongo.mobile;
 
 import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -35,6 +48,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     static final LatLng HAMBURG = new LatLng(53.558, 9.927);
     static final LatLng KIEL = new LatLng(53.551, 9.993);
+
+    private TextView locationText;
+    private TextView addressText;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -79,94 +95,137 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-      /*  // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_map, container, false);
-        View v = inflater.inflate(R.layout.fragment_map, null, false);
 
-        //mMap = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-
-        SupportMapFragment  fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-
-        mMap = fragment.getMap();
-
-        Marker hamburg = mMap.addMarker(new MarkerOptions().position(HAMBURG)
-                .title("Hamburg"));
-        Marker kiel = mMap.addMarker(new MarkerOptions()
-                .position(KIEL)
-                .title("Kiel")
-                .snippet("Kiel is cool"));
-
-        // Move the camera instantly to hamburg with a zoom of 15.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
-
-        // Zoom in, animating the camera.
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
-
-        //...
-
-        return v;
-        */
         // inflate and return the layout
-        View v = inflater.inflate(R.layout.fragment_map, container,
-                false);
+        View v = inflater.inflate(R.layout.fragment_map, container, false);
+        locationText = (TextView)v.findViewById(R.id.location);
+        addressText = (TextView)v.findViewById(R.id.address);
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
         mMapView.onResume();// needed to get the map to display immediately
-
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+
+
         mMap = mMapView.getMap();
-        // latitude and longitude
-        /*double latitude = 17.385044;
-        double longitude = 78.486671;
-
-        // create marker
-        MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude)).title("Hello Maps");
-
-        // Changing marker icon
-        marker.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
-
-        // adding marker
-        mMap.addMarker(marker);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(17.385044, 78.486671)).zoom(12).build();
-        mMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(cameraPosition));*/
-
-        Marker hamburg = mMap.addMarker(new MarkerOptions().position(HAMBURG)
-                .title("Hamburg"));
-        Marker kiel = mMap.addMarker(new MarkerOptions()
-                .position(KIEL)
-                .title("Kiel")
-                .snippet("Kiel is cool"));
-
-        // Move the camera instantly to hamburg with a zoom of 15.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
-
-        // Zoom in, animating the camera.
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
+        // Updates the location and zoom of the MapView
+     //   CameraPosition cameraPosition = new CameraPosition.Builder()
+       //         .target(new LatLng(17.385044, 78.486671)).zoom(12).build();
+       // mMap.animateCamera(CameraUpdateFactory
+         //       .newCameraPosition(cameraPosition));
 
 
 
+        // Enable Zoom
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        Log.i("ROY MAP", "0");
+        //set Map TYPE
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        //enable Current location Button
+        mMap.setMyLocationEnabled(true);
+
+        //set "listener" for changing my location
+        mMap.setOnMyLocationChangeListener(myLocationChangeListener());
 
 
-
-
-
+       // mMap.getUiSettings().setCompassEnabled(true);
+       // LatLng pdv = new LatLng(latitude, longitude);
+      //  LatLng moi = new LatLng(-4.3257419,15.3384682);
+      //  Marker hamburg = mMap.addMarker(new MarkerOptions().position(moi)
+      //          .title("toto").snippet("tata"));
 
         // Perform any camera updates here
         return v;
     }
 
+    public GoogleMap.OnMyLocationChangeListener myLocationChangeListener() {
+        return new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
+              //  Toast.makeText(getActivity(),"MAP 3",Toast.LENGTH_LONG).show();
+                Log.i("ROY MAP", "3");
+
+                Marker marker;
+                marker = mMap.addMarker(new MarkerOptions().position(loc));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                locationText.setText("Vos Coordonnées [" + longitude + " ; " + latitude + " ]");
+
+                //get current address by invoke an AsyncTask object
+                new GetAddressTask().execute(String.valueOf(latitude), String.valueOf(longitude));
+            }
+        };
+    }
+    public void callBackDataFromAsyncTask(String address) {
+        addressText.setText(address);
+    }
+
+    public class GetAddressTask extends AsyncTask<String, Void, String> {
+
+
+        public GetAddressTask() {
+            super();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            Log.i("ROY MAP", "1");
+          //  Toast.makeText(getActivity(),"MAP 1",Toast.LENGTH_LONG).show();
+
+            try {
+                addresses = geocoder.getFromLocation(Double.parseDouble(params[0]), Double.parseDouble(params[1]), 1);
+                Log.i("ROY MAP", "sssss");
+
+                //get current Street name
+                String address = addresses.get(0).getAddressLine(0);
+
+                //get current province/City
+                String province = addresses.get(0).getAdminArea();
+
+                //get country
+                String country = addresses.get(0).getCountryName();
+
+                //get postal code
+                String postalCode = addresses.get(0).getPostalCode();
+
+                //get place Name
+                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
+                return "Rue : " + address + "\n" + "Commune/Ville : " + province + "\nPays : " + country
+                        + "\nCODE Postal : " + postalCode + "\n" + "Lieu: " + knownName;
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return "IOE EXCEPTION";
+
+            } catch (IllegalArgumentException ex) {
+                ex.printStackTrace();
+                return "IllegalArgument Exception";
+            }
+
+        }
+
+        /**
+         * When the task finishes, onPostExecute() call back data to Activity UI and displays the address.
+         * @param address
+         */
+        @Override
+        protected void onPostExecute(String address) {
+            // Call back Data and Display the current address in the UI
+            callBackDataFromAsyncTask(address);
+        }
+    }
 
 
 

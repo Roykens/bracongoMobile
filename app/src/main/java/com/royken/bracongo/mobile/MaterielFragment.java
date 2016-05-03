@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -85,9 +86,7 @@ public class MaterielFragment extends Fragment implements AdapterView.OnItemClic
         MaterielDao dao = new MaterielDao(getActivity().getApplicationContext());
         materiels = dao.materiels();
         setRetainInstance(true);
-
-
-    }
+}
 
 
     @Override
@@ -112,7 +111,13 @@ public class MaterielFragment extends Fragment implements AdapterView.OnItemClic
                         Log.i("PLVS", projection.getNom() + " Nombre brac " + projection.getNombreBrac() + " Nombre Conc " + projection.getNombreCon() + "Etat Brac " + projection.getEtatBrac() + " Etat Conc " + projection.getEtatConc() + " Brac casse "+ projection.getNombreCasseBrac());
                     }
                 }
-                new BackgroundTask().execute();
+
+                Fragment fragment = ActionFragment.newInstance();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.mainFrame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+               // new BackgroundTask().execute();
                // Gson jeson = new Gson();
                // GsonBuilder builder = new GsonBuilder();
                // Gson gson = builder.create();
@@ -229,7 +234,7 @@ public class MaterielFragment extends Fragment implements AdapterView.OnItemClic
                 e.printStackTrace();
             }
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://10.0.2.2:8080/")
+                    .baseUrl("http://192.168.1.110:8080/")
                     //.addConverterFactory(JacksonConverterFactory.create(mapper))
                     .client(httpClient.build())
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -246,7 +251,7 @@ public class MaterielFragment extends Fragment implements AdapterView.OnItemClic
             call.enqueue(new Callback<ReponseProjection>() {
                 @Override
                 public void onResponse(Call<ReponseProjection> call, Response<ReponseProjection> response) {
-                    Log.i("Retrofit Logging", response.body().toString());
+                   // Log.i("Retrofit Logging", response.body().toString());
                 }
 
                 @Override

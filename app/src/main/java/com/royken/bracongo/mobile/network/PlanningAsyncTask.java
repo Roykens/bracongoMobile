@@ -51,7 +51,7 @@ public class PlanningAsyncTask extends AsyncTask<Object, Void, Void> {
       //  PointDvao dao = new PointDvao(getApplicationContext());
         Log.i("", "getProducts de planning......");
         // ArrayList<Product> productList = null;
-        HttpGet httpGet = new HttpGet("http://192.168.43.126:8080/bracongo/api/pdv/551");
+        HttpGet httpGet = new HttpGet("http://192.168.1.110:8080/bracongo/api/pdv/551");
 
         //setting header to request for a JSON response
         httpGet.setHeader("Accept", "application/json");

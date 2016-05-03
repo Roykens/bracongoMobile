@@ -11,7 +11,7 @@
     <string name="choice_prompt">Etat</string>
     <string-array name="choices">
         <item>M</item>
-        <item>Bo</item>
+        <item>B</item>
         <item>TB</item>
     </string-array>
 

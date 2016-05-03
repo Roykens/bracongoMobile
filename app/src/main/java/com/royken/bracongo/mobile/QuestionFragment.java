@@ -171,7 +171,7 @@ public class QuestionFragment extends Fragment {
                         minuteBrac = selectedMinute+"";
                     }
                 }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
+                mTimePicker.setTitle("Choisir le temps");
                 mTimePicker.show();
 
             }
@@ -194,7 +194,7 @@ public class QuestionFragment extends Fragment {
                         minuteBral = selectedMinute + "";
                     }
                 }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
+                mTimePicker.setTitle("Choisir le temps");
                 mTimePicker.show();
 
             }

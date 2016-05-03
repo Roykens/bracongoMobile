@@ -40,8 +40,6 @@ public class BoissonCustomAdapter extends BaseAdapter {
     /* used to keep the note edit text row id within the list */
     private int mNoteId = DEFAULT_ID_VALUE;
 
-
-
     private int x = 1;
 
     private List<BoissonProjection> boissonProjections;
@@ -123,7 +121,6 @@ public class BoissonCustomAdapter extends BaseAdapter {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     int getPosition = (Integer) buttonView.getTag();
                     boissonProjections.get(getPosition).setDisponible(buttonView.isChecked());
-
                     //notifyDataSetChanged();
                 }
             });
@@ -221,7 +218,7 @@ public class BoissonCustomAdapter extends BaseAdapter {
 
         boissonProjections = new ArrayList<>();
         for (Boisson boisson: boissons) {
-            BoissonProjection boissonProjection = new BoissonProjection(boisson.getNom(),boisson.getId(),"","",false);
+            BoissonProjection boissonProjection = new BoissonProjection(boisson.getNom(),boisson.getIdServeur(),boisson.getPrix()+"","",false);
             boissonProjections.add(boissonProjection);
         }
     }
