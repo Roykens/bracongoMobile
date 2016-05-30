@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.royken.bracongo.mobile.entities.Boisson;
 import com.royken.bracongo.mobile.entities.Materiel;
 import com.royken.bracongo.mobile.entities.Plv;
+import com.royken.bracongo.mobile.entities.projection.PlanningEnquetteur;
 import com.royken.bracongo.mobile.entities.projection.ReponseProjection;
 
 import java.util.List;
@@ -40,6 +41,9 @@ public interface ReponseService {
     @GET("/bracongo/api/plv")
     Call<List<Plv>> getAllPlvs();
 
+    @GET("/bracongo/api/pdv/planning/{login}/{password}")
+    Call<PlanningEnquetteur> getPlanning(@Path("login") String login, @Path("password") String password);
+
     @POST("/3/image")
     void postImage(
             @Header("Authorization") String auth,
@@ -58,7 +62,7 @@ public interface ReponseService {
             .excludeFieldsWithoutExposeAnnotation().create();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
+            .baseUrl("http://192.168.1.110:8080/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 

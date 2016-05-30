@@ -1,5 +1,8 @@
 package com.royken.bracongo.mobile.entities;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,22 +10,39 @@ import java.io.Serializable;
  */
 public class PointDeVente implements Serializable {
 
+
     private int id;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("id")
     private int idServeur;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("nom")
     private String nom;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("adresse")
     private String adresse;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("latitude")
     private double latitude;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("longitude")
     private double longitude;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("typeCategorie")
     private String categorie;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("typeRegime")
     private String regime;
 
+    @Expose(serialize = false, deserialize = true)
+    @SerializedName("typePdv")
     private String type;
 
 
@@ -96,5 +116,20 @@ public class PointDeVente implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "PointDeVente{" +
+                "id=" + id +
+                ", idServeur=" + idServeur +
+                ", nom='" + nom + '\'' +
+                ", adresse='" + adresse + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", categorie='" + categorie + '\'' +
+                ", regime='" + regime + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

@@ -108,22 +108,43 @@ public class QuestionFragment extends Fragment {
         suiteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 reponseProjection.setParcEmballageBracongo(Integer.parseInt(txtmballageBrac.getText().toString().trim()));
                 reponseProjection.setParcEmballageBralima(Integer.parseInt(txtmballageConc.getText().toString().trim()));
-                reponseProjection.setJoursEcouleVisiteFDVBrac(Integer.parseInt(txtpassgeBrac.getText().toString().trim()));
-                reponseProjection.setJoursEcouleVisiteFDVBral(Integer.parseInt(txtpassgeBral.getText().toString().trim()));
+                String jourBrac = txtpassgeBrac.getText().toString().trim();
+                String jourBral = txtpassgeBral.getText().toString().trim();
+                boolean srdbrac;
+                boolean srdbral;
+                if(jourBrac.length() > 0){
+                    reponseProjection.setJoursEcouleVisiteFDVBrac(Integer.parseInt(jourBrac));
+                }
+                else {
+                    reponseProjection.setJoursEcouleVisiteFDVBrac(-1);
+                }
+
+                if(jourBral.length() > 0){
+                    reponseProjection.setJoursEcouleVisiteFDVBral(Integer.parseInt(jourBral));
+                }
+                else {
+                    reponseProjection.setJoursEcouleVisiteFDVBral(-1);
+                }
+
                 reponseProjection.setNombrePhn(Integer.parseInt(txtPhn.getText().toString().trim()));
                 if(srdBracV.trim().equalsIgnoreCase("OUI")){
                     reponseProjection.setSrdBrac(true);
+                    srdbrac = true;
                 }
                 else {
                     reponseProjection.setSrdBrac(false);
+                    srdbrac = false;
                 }
                 if(srdBralV.trim().equalsIgnoreCase("OUI")){
                     reponseProjection.setSrdBral(true);
+                    srdbral = true;
                 }
                 else {
                     reponseProjection.setSrdBral(false);
+                    srdbral = true;
                 }
                 if(fifoStr.trim().equalsIgnoreCase("OUI")){
                     reponseProjection.setFifo(true);
@@ -132,17 +153,32 @@ public class QuestionFragment extends Fragment {
                     reponseProjection.setFifo(false);
                 }
                 Calendar gc = new GregorianCalendar();
-                //gc.setTime(d);
-                gc.set(Calendar.HOUR_OF_DAY, Integer.parseInt(heureBrac));
-                gc.set(Calendar.MINUTE,Integer.parseInt(minuteBrac));
-                // gc.add(Calendar.HOUR, 2);
-                Date d2 = gc.getTime();
-                reponseProjection.setHeurePassageSrdBrac(d2);
-                gc.set(Calendar.HOUR_OF_DAY, Integer.parseInt(heureBral));
-                gc.set(Calendar.MINUTE, Integer.parseInt(minuteBral));
-                d2 = gc.getTime();
-                reponseProjection.setHeurePassageSrdBral(d2);
-                reponseProjection.setHeureVisite(new Date());
+                Date d2;
+                if(srdbrac){
+
+                    //gc.setTime(d);
+                    gc.set(Calendar.HOUR_OF_DAY, Integer.parseInt(heureBrac)-1);
+                    gc.set(Calendar.MINUTE,Integer.parseInt(minuteBrac));
+                    // gc.add(Calendar.HOUR, 2);
+                   d2 = gc.getTime();
+                    reponseProjection.setHeurePassageSrdBrac(d2);
+                }
+                else {
+
+                    reponseProjection.setHeurePassageSrdBrac(null);
+                }
+                if (srdbral){
+                    gc.set(Calendar.HOUR_OF_DAY, Integer.parseInt(heureBral));
+                    gc.set(Calendar.MINUTE, Integer.parseInt(minuteBral));
+                    d2 = gc.getTime();
+                    reponseProjection.setHeurePassageSrdBral(d2);
+                }
+                else {
+                    reponseProjection.setHeurePassageSrdBral(null);
+                }
+                gc = new GregorianCalendar();
+                gc.set(Calendar.HOUR_OF_DAY,gc.get(Calendar.HOUR_OF_DAY)-1);
+                reponseProjection.setHeureVisite(gc.getTime());
                 SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                 int idPln = settings.getInt("com.royken.idPln", 0);
                 reponseProjection.setIdPlanning(Long.parseLong(idPln+""));
@@ -211,7 +247,7 @@ public class QuestionFragment extends Fragment {
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 //holder.data.setSelected(arg2);
                 //int pos = (Integer) arg0.getTag();
-                Toast.makeText(getActivity(), (String) arg0.getItemAtPosition(arg2) + " position " + arg2 + "  " + arg3 + "Tag " + (Integer) arg0.getTag(), Toast.LENGTH_LONG).show();
+
                 //plvProjections.get(pos).setEtatBrac((String)arg0.getItemAtPosition(arg2));
                 srdBracV = (String) arg0.getItemAtPosition(arg2);
                 // viewHolder.text.setText(viewHolder.data.getText());
@@ -228,8 +264,7 @@ public class QuestionFragment extends Fragment {
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 //holder.data.setSelected(arg2);
                 //int pos = (Integer) arg0.getTag();
-                Toast.makeText(getActivity(), (String) arg0.getItemAtPosition(arg2) + " position " + arg2 + "  " + arg3 + "Tag " + (Integer) arg0.getTag(), Toast.LENGTH_LONG).show();
-                //plvProjections.get(pos).setEtatBrac((String)arg0.getItemAtPosition(arg2));
+                     //plvProjections.get(pos).setEtatBrac((String)arg0.getItemAtPosition(arg2));
                 fifoStr = (String) arg0.getItemAtPosition(arg2);
                 // viewHolder.text.setText(viewHolder.data.getText());
             }
@@ -245,7 +280,6 @@ public class QuestionFragment extends Fragment {
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 //holder.data.setSelected(arg2);
                 //int pos = (Integer) arg0.getTag();
-                Toast.makeText(getActivity(), (String) arg0.getItemAtPosition(arg2) + " position " + arg2 + "  " + arg3 + "Tag " + (Integer) arg0.getTag(), Toast.LENGTH_LONG).show();
                 //plvProjections.get(pos).setEtatBrac((String)arg0.getItemAtPosition(arg2));
                 srdBralV =  (String)arg0.getItemAtPosition(arg2);
                 // viewHolder.text.setText(viewHolder.data.getText());

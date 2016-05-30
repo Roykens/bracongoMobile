@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -27,6 +28,7 @@ import com.royken.bracongo.mobile.dao.PointDvao;
 import com.royken.bracongo.mobile.entities.Boisson;
 import com.royken.bracongo.mobile.entities.projection.BoissonProjection;
 import com.royken.bracongo.mobile.entities.projection.ReponseProjection;
+import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 import com.royken.bracongo.mobile.util.ReponseService;
 
 import java.io.IOException;
@@ -127,7 +129,12 @@ public class BoissonListFragment extends ListFragment{
                 @Override
                 public void onRefresh() {
                     try {
-                        refreshContent();
+                        AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+                        if (!androidNetworkUtility.isConnectedToServer("http://192.168.1.110:8080", 1000)) {
+                            Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+                        } else {
+                            refreshContent();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -160,7 +167,7 @@ public class BoissonListFragment extends ListFragment{
 // add logging as last interceptor
         httpClient.addInterceptor(logging);
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.43.128:8080/")
+                .baseUrl("http://192.168.1.110:8080/")
                 //.baseUrl("http://10.0.2.2:8080/")
                         //.addConverterFactory(JacksonConverterFactory.create(mapper))192.168.1.110
                 .client(httpClient.build())

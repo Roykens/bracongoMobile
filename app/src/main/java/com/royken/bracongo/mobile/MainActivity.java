@@ -49,7 +49,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BlankFragment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener, CardListFragment2.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener, PlvFragment.OnFragmentInteractionListener, MaterielFragment.OnFragmentInteractionListener, QuestionFragment.OnFragmentInteractionListener, BoissonListFragment.OnFragmentInteractionListener, MaterielListFragment.OnFragmentInteractionListener, PlvListFragment.OnFragmentInteractionListener, AccueilFragment.OnFragmentInteractionListener, ActionFragment.OnFragmentInteractionListener, CommentFragment.OnFragmentInteractionListener,ParametreFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, TwoFragment.OnFragmentInteractionListener, PlanningFragment.OnFragmentInteractionListener, TestFragment.OnFragmentInteractionListener,PointDeVenteFragment.OnFragmentInteractionListener, PlvFragment.OnFragmentInteractionListener, MaterielFragment.OnFragmentInteractionListener, QuestionFragment.OnFragmentInteractionListener, BoissonListFragment.OnFragmentInteractionListener, MaterielListFragment.OnFragmentInteractionListener, PlvListFragment.OnFragmentInteractionListener, AccueilFragment.OnFragmentInteractionListener, ActionFragment.OnFragmentInteractionListener, CommentFragment.OnFragmentInteractionListener,ParametreFragment.OnFragmentInteractionListener{
 
     public static final String PREFS_NAME = "com.royken.MyPrefsFile";
     private boolean isValide;
@@ -243,10 +243,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onFragmentInteraction(String id) {
 
-    }
 
 
     private class LongOperation  extends AsyncTask<String, Void, Void> {
@@ -380,9 +377,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     private class PlanningAsyncTask  extends AsyncTask<String, Void, Void> {
-
-
 
         // Required initialization
 
@@ -391,14 +387,12 @@ public class MainActivity extends AppCompatActivity
         private String Error = null;
         private ProgressDialog Dialog = new ProgressDialog(MainActivity.this);
         String data ="";
-
-
         protected void onPreExecute() {
             // NOTE: You can call UI Element here.
 
             //Start Progress Dialog (Message)
 
-            Dialog.setMessage("Please wait..");
+            Dialog.setMessage("Veuillez patientez...");
             Dialog.show();
 
         }
@@ -436,8 +430,18 @@ public class MainActivity extends AppCompatActivity
                     pointDeVente.setCategorie(object.getString("typeCategorie"));
                     pointDeVente.setRegime(object.getString("typeRegime"));
                     pointDeVente.setIdServeur(object.getInt("id"));
-                    pointDeVente.setLatitude(object.getDouble("latitude"));
-                    pointDeVente.setLongitude(object.getDouble("longitude"));
+                    if(object.has("latitude")){
+                        pointDeVente.setLatitude(object.getDouble("latitude"));
+                    }
+                    else {
+                        pointDeVente.setLatitude(-4.3275949);
+                    }
+                    if(object.has("longitude")){
+                        pointDeVente.setLongitude(object.getDouble("longitude"));
+                    }
+                    else {
+                        pointDeVente.setLongitude(15.341604);
+                    }
                     pointDeVente.setAdresse(object.getString("adresse"));
 
                     dao.insertPdv(pointDeVente);

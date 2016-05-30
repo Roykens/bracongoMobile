@@ -1,12 +1,19 @@
 package com.royken.bracongo.mobile;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,13 +22,37 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.royken.bracongo.mobile.adapter.PlvListAdapter;
 import com.royken.bracongo.mobile.adapter.PoinDeVenteCustomAdapter;
 import com.royken.bracongo.mobile.dao.PointDvao;
 import com.royken.bracongo.mobile.entities.Boisson;
+import com.royken.bracongo.mobile.entities.Plv;
 import com.royken.bracongo.mobile.entities.PointDeVente;
+import com.royken.bracongo.mobile.entities.projection.PlanningEnquetteur;
+import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
+import com.royken.bracongo.mobile.util.ReponseService;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by royken on 11/04/16.
@@ -41,6 +72,13 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
     private static final String ARG_TYPE = "type";
     private static final String ARG_REGIME = "regime";
     private static final String ARG_CATEGORIE = "categorie";
+    public static final String PREFS_NAME = "com.royken.MyPrefsFile";
+    private SwipeRefreshLayout swipeContainer;
+    PoinDeVenteCustomAdapter boissonCustomAdapter;
+    SharedPreferences settings ;
+    String login;
+    String password;
+    PointDvao dao ;
 
     private List<PointDeVente> pointDeVentes = new ArrayList<>();
 
@@ -115,10 +153,16 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
             categorie = getArguments().getString(ARG_CATEGORIE);
         }
         setRetainInstance(true);
-        PointDvao dao = new PointDvao(getActivity().getApplicationContext());
-        pointDeVentes = dao.pointDeVentes();
-        PoinDeVenteCustomAdapter boissonCustomAdapter = new PoinDeVenteCustomAdapter(getActivity(),pointDeVentes);
 
+        dao = new PointDvao(getActivity().getApplicationContext());
+        pointDeVentes = dao.pointDeVentes();
+        boissonCustomAdapter = new PoinDeVenteCustomAdapter(getActivity(),pointDeVentes);
+        settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        login = settings.getString("com.royken.login", "");
+        password = settings.getString("com.royken.password", "");
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Planning");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("");
         // CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(getActivity(), R.layout.fragment_card_list);
 
         setHasOptionsMenu(true);
@@ -203,11 +247,98 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
         // handle item selection
         switch (item.getItemId()) {
             case R.id.actualisePlanning:
-                Toast.makeText(getActivity().getApplicationContext(),"Du courage mon type",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity().getApplicationContext(),"Du courage mon type",Toast.LENGTH_LONG).show();
+                new PlanningAsyncTask().execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void refreshContent() throws IOException {
+        Retrofit retrofit;
+        Gson gson = new GsonBuilder()
+                .disableHtmlEscaping()
+                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                .setPrettyPrinting()
+                .serializeNulls()
+                .excludeFieldsWithoutExposeAnnotation().create();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+// add your other interceptors …
+
+// add logging as last interceptor
+        httpClient.addInterceptor(logging);
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.110:8080/")
+                        //.addConverterFactory(JacksonConverterFactory.create(mapper))
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        ReponseService service = retrofit.create(ReponseService.class);
+        Call<PlanningEnquetteur> call = service.getPlanning(login,password);
+        //List<Boisson> result = call.execute().body();
+        //final List<Boisson> result;
+        call.enqueue(new Callback<PlanningEnquetteur>() {
+            @Override
+            public void onResponse(Call<PlanningEnquetteur> call, Response<PlanningEnquetteur> response) {
+                Log.i("Result....", response.toString());
+                PlanningEnquetteur result = response.body();
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("com.royken.idPln", result.getIdPlanning().intValue());
+                editor.commit();
+                dao.clear();
+                List<PointDeVente> pdvs = result.getPointDeVentes();
+                Log.i("Le resultat",pdvs.toString());
+                for (PointDeVente pdv : pdvs){
+                    if(pdv.getNom() != null)
+                    dao.insertPdv(pdv);
+                }
+                pointDeVentes = dao.pointDeVentes();
+                boissonCustomAdapter = new PoinDeVenteCustomAdapter(getActivity(),pointDeVentes);
+                setListAdapter(boissonCustomAdapter);
+                //swipeContainer.setRefreshing(false);
+            }
+            @Override
+            public void onFailure(Call<PlanningEnquetteur> call, Throwable t) {
+
+                Log.i("Error...", t.toString());
+            }
+        });
+    }
+
+    private class PlanningAsyncTask  extends AsyncTask<String, Void, Void> {
+        // Required initialization
+        private ProgressDialog Dialog = new ProgressDialog(getActivity());
+        String data ="";
+        protected void onPreExecute() {
+            Dialog.setMessage("Veuillez patientez...");
+            Dialog.show();
+
+        }
+
+        // Call after onPreExecute method
+        protected Void doInBackground(String... urls) {
+
+            try {
+                refreshContent();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void unused) {
+            // NOTE: You can call UI Element here.
+            Log.i("Fin","J'ai fini");
+            // Close progress dialog
+            Dialog.dismiss();
+
+        }
+
     }
 
 

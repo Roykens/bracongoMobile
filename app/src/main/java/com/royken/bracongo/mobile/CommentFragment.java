@@ -26,7 +26,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.royken.bracongo.mobile.adapter.ImageAdapter;
+import com.royken.bracongo.mobile.dao.PointDvao;
 import com.royken.bracongo.mobile.entities.projection.ReponseProjection;
+import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 import com.royken.bracongo.mobile.util.ReponseService;
 import com.royken.bracongo.mobile.util.RetrofitBuiler;
 
@@ -64,6 +66,7 @@ public class CommentFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
+    private PointDvao pointDvao;
     private List<String> myList;  // String list that contains file paths to images
     private GridView gridview;
     private String mCurrentPhotoPath;  // File path to the last image captured
@@ -94,6 +97,7 @@ public class CommentFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.comment_fragment, container, false);
         reponseProjection = (ReponseProjection) getActivity().getApplicationContext();
+        pointDvao = new PointDvao(getActivity().getApplicationContext());
         // Initialize GridView
         gridview = (GridView) rootView.findViewById(R.id.gridView1);
        // gridview.setAdapter(new ImageAdapter(getActivity().getApplicationContext()));
@@ -102,13 +106,12 @@ public class CommentFragment extends Fragment implements View.OnClickListener {
         envoyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new BackgroundTask().execute();
-                Fragment fragment = PlanningFragment.newInstance("","");
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.mainFrame, fragment);
-                ft.addToBackStack(null);
-
-                ft.commit();
+                AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+                if (!androidNetworkUtility.isConnectedToServer("http://192.168.1.110:8080", 1000)) {
+                    Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+                } else {
+                    new BackgroundTask().execute();
+                }
             }
         });
         FloatingActionButton myFab = (FloatingActionButton)  rootView.findViewById(R.id.fab);
@@ -213,7 +216,7 @@ public class CommentFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
 
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Actions");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Envoi");
 
     }
 
@@ -404,7 +407,17 @@ public class CommentFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onResponse(Call<ReponseProjection> call, Response<ReponseProjection> response) {
                     // Log.i("Retrofit Logging", response.body().toString());
+                    pointDvao.deletePointDeVente(reponseProjection.getIdPdv());
+                    reponseProjection.init();
+
                     Toast.makeText(getActivity(),"Donnée envoyée avec succès",Toast.LENGTH_LONG).show();
+                    Fragment fragment = PlanningFragment.newInstance("","");
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.mainFrame, fragment);
+                    ft.addToBackStack(null);
+
+                    ft.commit();
+
                 }
 
                 @Override

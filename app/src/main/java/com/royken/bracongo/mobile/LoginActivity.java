@@ -82,7 +82,7 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        _loginButton.setEnabled(false);
+        _loginButton.setEnabled(true);
 
         // final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
         // progressDialog.setIndeterminate(true);
@@ -156,7 +156,7 @@ public class LoginActivity extends Activity {
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError("Mot de passe obligatoire");
             valid = false;
         } else {
             _passwordText.setError(null);
@@ -172,6 +172,7 @@ public class LoginActivity extends Activity {
         private String Error = null;
         private ProgressDialog Dialog = new ProgressDialog(LoginActivity.this);
         String data ="";
+        private boolean server = false;
         @Override
         protected void onPreExecute() {
             // showDialog(AUTHORIZING_DIALOG);
@@ -182,46 +183,63 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean result) {
             Dialog.dismiss();
-            if(isValide){
+            if(!server){
+                Toast.makeText(getApplicationContext(),"Aucune connexion au serveur. Veuillez reéssayer plus tard",Toast.LENGTH_LONG).show();
+            }
+            else{
+                if(isValide){
 
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("com.royken.login", login);
-                editor.putString("com.royken.password",password);
-                //editor.putBoolean("com.royken.hasLoggedIn",true);
-                editor.commit();
-                Intent intent = new Intent(LoginActivity.this,
-                        SplashScreen.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-                LoginActivity.this.finish();
+                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("com.royken.login", login);
+                    editor.putString("com.royken.password",password);
+                    //editor.putBoolean("com.royken.hasLoggedIn",true);
+                    editor.commit();
+                    Intent intent = new Intent(LoginActivity.this,
+                            SplashScreen.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
+                    LoginActivity.this.finish();
+                }
+                else {
+                    Log.i("Connection...","Failllllllll");
+                    Toast.makeText(getApplicationContext(),"Credential Error", Toast.LENGTH_LONG).show();
+                }
             }
-            else {
-                Log.i("Connection...","Failllllllll");
-                Toast.makeText(getApplicationContext(),"Credential Error", Toast.LENGTH_LONG);
-            }
+
     }
 
         @Override
         protected Boolean doInBackground(String... params) {
             //Do all your slow tasks here but dont set anything on UI
             //ALL ui activities on the main thread
+            AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+            if (!androidNetworkUtility.isConnectedToServer("http://192.168.1.110:8080",1000)) {
+                server = false;
 
-            HttpGet httpGet = new HttpGet("http://192.168.1.110:8080/bracongo/api/authenticate/"+login.trim()+"/"+password.trim());
-
-            //setting header to request for a JSON response
-            httpGet.setHeader("Accept", "application/json");
-            AndroidNetworkUtility httpUtil = new AndroidNetworkUtility();
-            String productJSONStr = httpUtil.getHttpResponse(httpGet);
-            Log.d("", "Response: " + productJSONStr);
-            try {
-                JSONObject obj = new JSONObject(productJSONStr);
-                isValide = obj.getBoolean("isvalide");
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+                isValide = false;
+                return false;
             }
-            return true;
+
+            else{
+                server = true;
+                HttpGet httpGet = new HttpGet("http://192.168.1.110:8080/bracongo/api/authenticate/"+login.trim()+"/"+password.trim());
+
+                //setting header to request for a JSON response
+                httpGet.setHeader("Accept", "application/json");
+                AndroidNetworkUtility httpUtil = new AndroidNetworkUtility();
+                String productJSONStr = httpUtil.getHttpResponse(httpGet);
+                Log.d("", "Response: " + productJSONStr);
+                try {
+                    JSONObject obj = new JSONObject(productJSONStr);
+                    isValide = obj.getBoolean("isvalide");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+
 
         }
 

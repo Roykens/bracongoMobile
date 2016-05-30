@@ -120,7 +120,7 @@ public class PointDvao {
 
 
     public int deletePointDeVente(int id){
-        return  db.delete(TABLE_PDV,COL_PDID + " = "+ id,null);
+        return  db.delete(TABLE_PDV,COL_PDIDS + " = "+ id,null);
     }
 
     private PointDeVente cursorToPointDeVente(Cursor c) {

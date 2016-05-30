@@ -83,13 +83,14 @@ public class ParametreFragment extends Fragment {
 
         settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor = settings.edit();
-        login = settings.getString("com.royken.login","");
+        login = settings.getString("com.royken.login", "");
         password = settings.getString("com.royken.password","");
         url = settings.getString("com.royken.url","");
         loginTx.setText(login);
         passTxt.setText(password);
         urlTxt.setText(url);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Paramètres");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("");
 
     }
 

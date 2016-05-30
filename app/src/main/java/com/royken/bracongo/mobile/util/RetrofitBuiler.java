@@ -34,7 +34,7 @@ public class RetrofitBuiler {
         httpClient.addInterceptor(logging);
 
         return new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/")
+                .baseUrl("http://192.168.1.110:8080/")
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

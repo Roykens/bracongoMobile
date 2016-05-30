@@ -105,6 +105,7 @@ public class PointDeVenteFragment extends Fragment{
             regime = getArguments().getString(ARG_REGIME);
             categorie = getArguments().getString(ARG_CATEGORIE);
             ReponseProjection reponseProjection = (ReponseProjection) getActivity().getApplicationContext();
+            reponseProjection.init();
             reponseProjection.setIdPdv(ids);
         }
     }
@@ -128,12 +129,12 @@ public class PointDeVenteFragment extends Fragment{
         mMap = mMapView.getMap();
 
         mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(-4.3257419, 15.3384682))
+                .position(new LatLng(-4.3275949, 15.341604))
                 .title("Moi")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
         LatLng pdv = new LatLng(latitude, longitude);
-        LatLng moi = new LatLng(-4.3257419,15.3384682);
+        LatLng moi = new LatLng(-4.3275949,15.341604);
         Marker hamburg = mMap.addMarker(new MarkerOptions().position(pdv)
                 .title(nom).snippet(adresse));
  /*       Marker kiel = mMap.addMarker(new MarkerOptions()
@@ -212,6 +213,7 @@ public class PointDeVenteFragment extends Fragment{
     }
 
     protected void route(LatLng sourcePosition, LatLng destPosition, String mode) {
+
         final  Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 try {

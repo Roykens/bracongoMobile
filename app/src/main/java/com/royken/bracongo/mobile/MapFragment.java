@@ -46,8 +46,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_PARAM2 = "param2";
     MapView mMapView;
     private GoogleMap mMap;
-    static final LatLng HAMBURG = new LatLng(53.558, 9.927);
-    static final LatLng KIEL = new LatLng(53.551, 9.993);
 
     private TextView locationText;
     private TextView addressText;
@@ -122,7 +120,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // Enable Zoom
         mMap.getUiSettings().setZoomGesturesEnabled(true);
-        Log.i("ROY MAP", "0");
         //set Map TYPE
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
@@ -150,8 +147,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                 double longitude = location.getLongitude();
                 double latitude = location.getLatitude();
-              //  Toast.makeText(getActivity(),"MAP 3",Toast.LENGTH_LONG).show();
-                Log.i("ROY MAP", "3");
 
                 Marker marker;
                 marker = mMap.addMarker(new MarkerOptions().position(loc));
@@ -180,12 +175,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Geocoder geocoder;
             List<Address> addresses;
             geocoder = new Geocoder(getActivity(), Locale.getDefault());
-            Log.i("ROY MAP", "1");
-          //  Toast.makeText(getActivity(),"MAP 1",Toast.LENGTH_LONG).show();
 
             try {
                 addresses = geocoder.getFromLocation(Double.parseDouble(params[0]), Double.parseDouble(params[1]), 1);
-                Log.i("ROY MAP", "sssss");
 
                 //get current Street name
                 String address = addresses.get(0).getAddressLine(0);

@@ -22,9 +22,10 @@
                 android:id="@+id/image_view_plv"
                 android:background="#ffffff"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="70dp"
                 android:layout_weight="20"
                 android:paddingLeft="5dp"
+                android:paddingTop="5dp"
                 android:paddingRight="0dp"
                 android:paddingBottom="5dp"
                 android:contentDescription="@string/app_name" />

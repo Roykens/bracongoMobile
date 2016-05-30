@@ -22,8 +22,7 @@
 
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="#AA000000"
-            android:textColor="#ffffffff"
+
             android:padding="5dp"
             android:layout_weight="0.8">
             <Button
@@ -31,7 +30,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Question"
-                android:background="@drawable/button_bg_transparent"
+                android:theme="@style/MyButton2"
                 android:padding="5dp"
                 android:textAlignment="center"
                 android:textColor="#FFF"

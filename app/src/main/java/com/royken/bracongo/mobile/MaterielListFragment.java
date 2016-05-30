@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -21,6 +22,7 @@ import com.royken.bracongo.mobile.dao.BoissonDao;
 import com.royken.bracongo.mobile.dao.MaterielDao;
 import com.royken.bracongo.mobile.entities.Boisson;
 import com.royken.bracongo.mobile.entities.Materiel;
+import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 import com.royken.bracongo.mobile.util.ReponseService;
 
 import java.io.IOException;
@@ -100,7 +102,12 @@ public class MaterielListFragment extends ListFragment {
                 @Override
                 public void onRefresh() {
                     try {
-                        refreshContent();
+                        AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+                        if (!androidNetworkUtility.isConnectedToServer("http://192.168.1.110:8080", 1000)) {
+                            Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+                        } else {
+                            refreshContent();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

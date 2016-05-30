@@ -173,7 +173,7 @@ public class MaterielCustomAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                     //holder.data.setSelected(arg2);
                     int pos = (Integer) arg0.getTag();
-                    Toast.makeText(mContext, (String) arg0.getItemAtPosition(arg2) + " position " + arg2 + "  " + arg3 + "Tag " + (Integer) arg0.getTag(), Toast.LENGTH_LONG).show();
+
                     materielProjections.get(pos).setEtatBrac((String) arg0.getItemAtPosition(arg2));
                     // (String)arg0.getItemAtPosition(arg2);
                     // viewHolder.text.setText(viewHolder.data.getText());

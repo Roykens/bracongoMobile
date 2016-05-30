@@ -85,22 +85,20 @@ public class PoinDeVenteCustomAdapter extends BaseAdapter {
         String categorie = pointDeVentes.get(position).getCategorie();
         Log.i("La couleurrrrr",categorie);
         TextView tv_Categorie = (TextView)layout.findViewById(R.id.catPdv);
-        if(categorie.trim() == "Di"){
+        if(categorie.toString().trim().equalsIgnoreCase("Di")){
             tv_Categorie.setBackgroundColor(Color.parseColor("#b9f2ff"));
         }
-        if(categorie.trim() == "Br"){
+        if(categorie.toString().trim().equalsIgnoreCase("Br")){
             tv_Categorie.setBackgroundColor(Color.parseColor("#cd7f32"));
         }
-        if(categorie.trim() == "Ag"){
+        if(categorie.toString().trim().equalsIgnoreCase("Ag")){
             tv_Categorie.setBackgroundColor(Color.parseColor("#c0c0c0"));
         }
-        if(!categorie.trim().equalsIgnoreCase("0r")){
-            Log.i("rrrrrrrrrrrrrrrrrrrrr","J'ai trouve l'orrrrrrrrrrrrr");
+        if(categorie.toString().trim().equalsIgnoreCase("Or")){
+
             tv_Categorie.setBackgroundColor(Color.parseColor("#ffd700"));
         }
-        else {
-            tv_Categorie.setBackgroundColor(Color.RED);
-        }
+
         tv_Categorie.setText(categorie);
 
         tv_Nom.setTag(position);
