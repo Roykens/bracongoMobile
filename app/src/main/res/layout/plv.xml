@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         cardView:cardCornerRadius="4dp"
+        cardView:cardElevation="3dp"
         android:layout_gravity="center"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"

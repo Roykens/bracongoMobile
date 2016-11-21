@@ -200,7 +200,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
-                            android:hint="Nombre PHN"/>
+                            android:hint="Nombre BACS"/>
                     </android.support.design.widget.TextInputLayout>
 
                     <LinearLayout
@@ -357,6 +357,93 @@
                             android:theme="@style/MyCheckBox"/>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp">
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:text="Regime A Corriger"
+                            android:layout_weight="1"/>
+                        <CheckBox
+                            android:id="@+id/regimeCorriger"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:text="Oui/Non"
+                            android:theme="@style/MyCheckBox"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp">
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:text="Materiels Non Renseignés"
+                            android:layout_weight="1"/>
+                        <CheckBox
+                            android:id="@+id/mNrenseigne"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:text="Oui/Non"
+                            android:theme="@style/MyCheckBox"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp">
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:text="Materiels Non Trouvés"
+                            android:layout_weight="1"/>
+                        <CheckBox
+                            android:id="@+id/mNtrouve"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:text="Oui/Non"
+                            android:theme="@style/MyCheckBox"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp">
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:text="Renfrocer Capacité Froid"
+                            android:layout_weight="1"/>
+                        <CheckBox
+                            android:id="@+id/renforcerFroidcbx"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:text="Oui/Non"
+                            android:theme="@style/MyCheckBox"/>
+                    </LinearLayout>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -369,6 +456,7 @@
                 android:theme="@style/MyButton2"
                 android:textAlignment="center"
                 android:padding="12dp"
+                android:textColor="#ffffff"
                 android:text="Suivant"/>
 
         </LinearLayout>

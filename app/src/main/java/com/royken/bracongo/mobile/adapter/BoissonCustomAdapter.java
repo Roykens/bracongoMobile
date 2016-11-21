@@ -185,22 +185,13 @@ public class BoissonCustomAdapter extends BaseAdapter {
         });
 
         if(holder == null){
-            Log.i("holder2", "holder est NULLLLLLLLLLLLLL");
-        }else {
-            Log.i("holder2", "holder est BONNNNNNNNNNNNNNNN");
 
-      //  holder.tv_Nom = (TextView)layout.findViewById(R.id.textView2);
+        }else {
+
         holder.tv_Nom.setText(boissonProjections.get(position).getNom());
-      //  holder.cbox = (CheckBox)layout.findViewById(R.id.checkBox);
         holder.cbox.setChecked(boissonProjections.get(position).isDisponible());
-       // holder.txt_Prix = (EditText)layout.findViewById(R.id.txtPrix);
         holder.txt_Prix.setText(boissonProjections.get(position).getPrix());
-       // holder.txt_Stock = (EditText)layout.findViewById(R.id.txtStock);
         holder.txt_Stock.setText(boissonProjections.get(position).getStock());
-       // holder.tv_Nom.setTag(position);
-       // holder.txt_Stock.setTag(position);
-        //holder.txt_Prix.setTag(position);
-       // holder.cbox.setTag(position);
         }
         return convertView;
 

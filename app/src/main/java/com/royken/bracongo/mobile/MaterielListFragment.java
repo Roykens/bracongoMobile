@@ -1,6 +1,8 @@
 package com.royken.bracongo.mobile;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -24,6 +26,7 @@ import com.royken.bracongo.mobile.entities.Boisson;
 import com.royken.bracongo.mobile.entities.Materiel;
 import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 import com.royken.bracongo.mobile.util.ReponseService;
+import com.royken.bracongo.mobile.util.RetrofitBuiler;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +44,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MaterielListFragment extends ListFragment {
 
+    public static final String PREFS_NAME = "com.royken.MyPrefsFile";
     private OnFragmentInteractionListener mListener;
 
     private SwipeRefreshLayout swipeContainer;
@@ -103,8 +107,9 @@ public class MaterielListFragment extends ListFragment {
                 public void onRefresh() {
                     try {
                         AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
-                        if (!androidNetworkUtility.isConnectedToServer("http://192.168.1.110:8080", 1000)) {
-                            Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+                        if (!androidNetworkUtility.isConnected(getActivity())) {
+                            //    Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+                            //    swipeContainer.setRefreshing(false);
                         } else {
                             refreshContent();
                         }
@@ -123,28 +128,10 @@ public class MaterielListFragment extends ListFragment {
     // fake a network operation's delayed response
     // this is just for demonstration, not real code!
     private void refreshContent() throws IOException {
-        Retrofit retrofit;
-        Gson gson = new GsonBuilder()
-                .disableHtmlEscaping()
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                .setPrettyPrinting()
-                .serializeNulls()
-                .excludeFieldsWithoutExposeAnnotation().create();
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String url = settings.getString("com.royken.url","");
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-// add your other interceptors …
-
-// add logging as last interceptor
-        httpClient.addInterceptor(logging);
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.110:8080/")
-                        //.addConverterFactory(JacksonConverterFactory.create(mapper))
-                .client(httpClient.build())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
+        Retrofit retrofit = RetrofitBuiler.getRetrofit(url+"/");
         ReponseService service = retrofit.create(ReponseService.class);
         Call<List<Materiel>> call = service.getAllMateriels();
         //List<Boisson> result = call.execute().body();

@@ -1,7 +1,12 @@
 package com.royken.bracongo.mobile;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -26,10 +31,19 @@ import com.royken.bracongo.mobile.adapter.PoinDeVenteCustomAdapter;
 import com.royken.bracongo.mobile.dao.BoissonDao;
 import com.royken.bracongo.mobile.dao.PointDvao;
 import com.royken.bracongo.mobile.entities.Boisson;
+import com.royken.bracongo.mobile.entities.PointDeVente;
 import com.royken.bracongo.mobile.entities.projection.BoissonProjection;
 import com.royken.bracongo.mobile.entities.projection.ReponseProjection;
 import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 import com.royken.bracongo.mobile.util.ReponseService;
+import com.royken.bracongo.mobile.util.RetrofitBuiler;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,6 +61,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class BoissonListFragment extends ListFragment{
 
+    public static final String PREFS_NAME = "com.royken.MyPrefsFile";
     private OnFragmentInteractionListener mListener;
 
     private List<Boisson> boissonList;
@@ -59,8 +74,9 @@ public class BoissonListFragment extends ListFragment{
 
     private List<Boisson> result;
 
-
+    SharedPreferences settings ;
     private BoissonDao boissonDao;
+    private boolean connection;
 
     public static BoissonListFragment newInstance() {
         BoissonListFragment fragment = new BoissonListFragment();
@@ -89,9 +105,6 @@ public class BoissonListFragment extends ListFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
         setRetainInstance(true);
 
         boissonDao = new BoissonDao(getActivity().getApplicationContext());
@@ -128,16 +141,18 @@ public class BoissonListFragment extends ListFragment{
             swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    try {
-                        AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
-                        if (!androidNetworkUtility.isConnectedToServer("http://192.168.1.110:8080", 1000)) {
-                            Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
-                        } else {
+                    AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+                    if (!androidNetworkUtility.isConnected(getActivity())) {
+                        //    Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+                        //    swipeContainer.setRefreshing(false);
+                    } else {
+                        try {
                             refreshContent();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+
 
                 }
             });
@@ -150,29 +165,10 @@ public class BoissonListFragment extends ListFragment{
     // fake a network operation's delayed response
     // this is just for demonstration, not real code!
     private void refreshContent() throws IOException {
-        Retrofit retrofit;
-        Gson gson = new GsonBuilder()
-                .disableHtmlEscaping()
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                .setPrettyPrinting()
-                .serializeNulls()
-                .excludeFieldsWithoutExposeAnnotation().create();
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String url = settings.getString("com.royken.url", "");
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-// add your other interceptors …
-
-// add logging as last interceptor
-        httpClient.addInterceptor(logging);
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.110:8080/")
-                //.baseUrl("http://10.0.2.2:8080/")
-                        //.addConverterFactory(JacksonConverterFactory.create(mapper))192.168.1.110
-                .client(httpClient.build())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
+        Retrofit retrofit = RetrofitBuiler.getRetrofit(url + "/");
         ReponseService service = retrofit.create(ReponseService.class);
         Call<List<Boisson>> call = service.getAllBoisson();
         //List<Boisson> result = call.execute().body();
@@ -230,6 +226,42 @@ public class BoissonListFragment extends ListFragment{
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private class RefreshAsyncTask  extends AsyncTask<String, Void, Void> {
+
+        protected void onPreExecute() {
+
+        }
+
+        // Call after onPreExecute method
+        protected Void doInBackground(String... urls) {
+            AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+            settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            String url = settings.getString("com.royken.url", "");
+
+            if (!androidNetworkUtility.isConnected(getActivity())) {
+
+                connection = false;
+            } else {
+                try {
+                    refreshContent();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void unused) {
+
+          if (connection == false){
+              Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+              swipeContainer.setRefreshing(false);
+          }
+
+        }
+
     }
 
 }

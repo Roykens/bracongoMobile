@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class PoinDeVenteCustomAdapter extends BaseAdapter {
 
-    private static final String TAG = "BoissonCustomAdapter";
+    private static final String TAG = "PoinDeVenteCustomAdapter";
     private Context mContext;
     private LayoutInflater mInflater;
     private List<PointDeVente> pointDeVentes;
@@ -83,7 +83,7 @@ public class PoinDeVenteCustomAdapter extends BaseAdapter {
         tv_Regime.setText(pointDeVentes.get(position).getRegime());
 
         String categorie = pointDeVentes.get(position).getCategorie();
-        Log.i("La couleurrrrr",categorie);
+       // Log.i("La couleurrrrr",categorie);
         TextView tv_Categorie = (TextView)layout.findViewById(R.id.catPdv);
         if(categorie.toString().trim().equalsIgnoreCase("Di")){
             tv_Categorie.setBackgroundColor(Color.parseColor("#b9f2ff"));
@@ -103,5 +103,10 @@ public class PoinDeVenteCustomAdapter extends BaseAdapter {
 
         tv_Nom.setTag(position);
         return layout;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return pointDeVentes.isEmpty();
     }
 }

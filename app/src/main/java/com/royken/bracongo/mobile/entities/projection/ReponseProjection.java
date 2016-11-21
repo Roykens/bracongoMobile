@@ -84,7 +84,9 @@ public class ReponseProjection extends Application {
     @SerializedName("action")
     private Action action;
 
-
+    @Expose
+    @SerializedName("commentaire")
+    private String commentaire;
 
     public ReponseProjection(){
         if(boissonProjections == null) {
@@ -253,5 +255,13 @@ public class ReponseProjection extends Application {
 
     public void setAction(Action action) {
         this.action = action;
+    }
+
+    public String getCommentaire() {
+        return commentaire;
+    }
+
+    public void setCommentaire(String commentaire) {
+        this.commentaire = commentaire;
     }
 }

@@ -1,23 +1,28 @@
 package com.royken.bracongo.mobile;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,19 +47,23 @@ public class LoginActivity extends Activity {
     EditText _passwordText;
     @InjectView(R.id.btn_login)
     Button _loginButton;
-    //@InjectView(R.id.link_signup)
-    //TextView _signupLink;
+    @InjectView(R.id.link_url)
+    TextView _urlLink;
     private String login;
+    private String url;
     private String password;
     boolean isValide;
+    SharedPreferences settings;
+    SharedPreferences.Editor editor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         boolean hasLoggedIn = settings.getBoolean("com.royken.hasLoggedIn", false);
+        url = settings.getString("com.royken.url","");
         if(hasLoggedIn == true){
             Intent intent = new Intent(LoginActivity.this,
                     SplashScreen.class);
@@ -69,7 +78,26 @@ public class LoginActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                login();
+                AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                String url = settings.getString("com.royken.url", "");
+                if (!androidNetworkUtility.isConnected(getApplicationContext())) {
+                    Toast.makeText(getApplicationContext(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+                } else {
+
+                    login();
+                }
+
+
+            }
+        });
+
+        _urlLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Finish the registration screen and return to the Login activity
+               // finish();
+                showChangeLangDialog();
             }
         });
     }
@@ -214,34 +242,72 @@ public class LoginActivity extends Activity {
             //Do all your slow tasks here but dont set anything on UI
             //ALL ui activities on the main thread
             AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
-            if (!androidNetworkUtility.isConnectedToServer("http://192.168.1.110:8080",1000)) {
+            url = settings.getString("com.royken.url","");
+            if (!androidNetworkUtility.isConnected(getApplicationContext())) {
                 server = false;
-
                 isValide = false;
                 return false;
             }
 
             else{
                 server = true;
-                HttpGet httpGet = new HttpGet("http://192.168.1.110:8080/bracongo/api/authenticate/"+login.trim()+"/"+password.trim());
-
-                //setting header to request for a JSON response
-                httpGet.setHeader("Accept", "application/json");
-                AndroidNetworkUtility httpUtil = new AndroidNetworkUtility();
-                String productJSONStr = httpUtil.getHttpResponse(httpGet);
-                Log.d("", "Response: " + productJSONStr);
                 try {
-                    JSONObject obj = new JSONObject(productJSONStr);
-                    isValide = obj.getBoolean("isvalide");
+                    HttpGet httpGet = new HttpGet(url+"/bracongo/api/authenticate/"+login.trim()+"/"+password.trim());
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    //setting header to request for a JSON response
+                    httpGet.setHeader("Accept", "application/json");
+                    AndroidNetworkUtility httpUtil = new AndroidNetworkUtility();
+                    String productJSONStr = httpUtil.getHttpResponse(httpGet);
+                    Log.d("", "Response: " + productJSONStr);
+                    try {
+                        JSONObject obj = new JSONObject(productJSONStr);
+                        isValide = obj.getBoolean("isvalide");
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+
+                }catch(Exception hce){
+                    server = false;
+                    hce.printStackTrace();
                 }
-                return true;
+
             }
 
-
+            return true;
         }
 
+    }
+
+    private void showChangeLangDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.url_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText edt = (EditText) dialogView.findViewById(R.id.input_url);
+        if(url.length() > 0){
+            edt.setText(url);
+        }
+        editor = settings.edit();
+        dialogBuilder.setTitle("Modification de l'URL");
+        dialogBuilder.setMessage("Entrer l'URL du serveur");
+        dialogBuilder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String txt = edt.getText().toString().trim();
+                editor.putString("com.royken.url",txt);
+                editor.commit();
+                Toast.makeText(getApplicationContext(),txt,Toast.LENGTH_LONG).show();
+            }
+        });
+        dialogBuilder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+                dialog.cancel();
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 }

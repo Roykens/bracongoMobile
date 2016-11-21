@@ -127,7 +127,7 @@ public class MaterielCustomAdapter extends BaseAdapter {
 
         materielProjections = new ArrayList<>();
         for (Materiel materiel: materiels) {
-            MaterielProjection materielProjection = new MaterielProjection(materiel.getIdServeur(),materiel.getNom(),"","","","","","");
+            MaterielProjection materielProjection = new MaterielProjection(materiel.getIdServeur(),materiel.getNom(),"","","","","","","");
             materielProjections.add(materielProjection);
         }
     }
@@ -156,13 +156,9 @@ public class MaterielCustomAdapter extends BaseAdapter {
             holder.txt_Nombre_Conc_casse = (EditText)convertView.findViewById(R.id.txtNbrCasseConcu);
             holder.spinnerBra = (Spinner)convertView.findViewById(R.id.etatBracongoM);
             holder.spinnerConc = (Spinner)convertView.findViewById(R.id.etatConcuM);
+            holder.txt_nombreJour = (EditText)convertView.findViewById(R.id.txtJour);
             holder.data = new DataHolder(getmContext());
-            if(holder.data == null){
-                Log.i("data", "Datat est NULLLLLLLLLLLLLLLLLLLLLLLL");
-            }
-            if(holder.spinnerBra == null){
-                Log.i("SPINNER","Le spinner est null");
-            }
+
             holder.spinnerBra.setAdapter(adapter);
             holder.spinnerConc.setAdapter(adapter2);
 
@@ -175,8 +171,7 @@ public class MaterielCustomAdapter extends BaseAdapter {
                     int pos = (Integer) arg0.getTag();
 
                     materielProjections.get(pos).setEtatBrac((String) arg0.getItemAtPosition(arg2));
-                    // (String)arg0.getItemAtPosition(arg2);
-                    // viewHolder.text.setText(viewHolder.data.getText());
+
                 }
 
                 @Override
@@ -191,10 +186,9 @@ public class MaterielCustomAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                     //holder.data.setSelected(arg2);
                     int pos = (Integer) arg0.getTag();
-                    Toast.makeText(mContext, (String) arg0.getItemAtPosition(arg2), Toast.LENGTH_LONG).show();
+                  //  Toast.makeText(mContext, (String) arg0.getItemAtPosition(arg2), Toast.LENGTH_LONG).show();
                     materielProjections.get(pos).setEtatConc((String) arg0.getItemAtPosition(arg2));
-                    // (String)arg0.getItemAtPosition(arg2);
-                    // viewHolder.text.setText(viewHolder.data.getText());
+
                 }
 
                 @Override
@@ -209,6 +203,7 @@ public class MaterielCustomAdapter extends BaseAdapter {
             convertView.setTag(R.id.txtNbrConcuM, holder.txt_Nombre_Conc);
             convertView.setTag(R.id.etatBracongo, holder.spinnerBra);
             convertView.setTag(R.id.etatConcu, holder.spinnerConc);
+            convertView.setTag(R.id.txtJour, holder.txt_nombreJour);
         } else {
             layout = (FrameLayout) convertView;
             holder = (ViewHolder) convertView.getTag();
@@ -220,22 +215,31 @@ public class MaterielCustomAdapter extends BaseAdapter {
         holder.txt_Nombre_Brac.setTag(position);
         holder.txt_Nombre_Brac_casse.setTag(position);
         holder.txt_Nombre_Conc_casse.setTag(position);
+        holder.txt_nombreJour.setTag(position);
 
-     /*   holder.spinnerBra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        holder.txt_nombreJour.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                holder.data.setSelected(arg2);
-                int pos = (Integer) holder.tv_Nom.getTag();
-                plvProjections.get(pos).setEtatBrac(holder.data.getText());
-                // viewHolder.text.setText(viewHolder.data.getText());
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                int pos = (Integer) holder.txt_nombreJour.getTag();
+
+                //  boissonProjections.get(pos).setPrix(s.toString());
+                materielProjections.get(pos).setJourCasse(s.toString().trim());
+
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
             }
 
-        });*/
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         holder.txt_Nombre_Brac.addTextChangedListener(new TextWatcher() {
 
@@ -292,7 +296,6 @@ public class MaterielCustomAdapter extends BaseAdapter {
                                       int count) {
                 int pos = (Integer) holder.txt_Nombre_Brac_casse.getTag();
 
-                //   boissonProjections.get(pos).setStock(s.toString());
                 materielProjections.get(pos).setNombreCasseBrac(s.toString().trim());
 
             }
@@ -315,10 +318,7 @@ public class MaterielCustomAdapter extends BaseAdapter {
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
                 int pos = (Integer) holder.txt_Nombre_Conc_casse.getTag();
-
-                //   boissonProjections.get(pos).setStock(s.toString());
                 materielProjections.get(pos).setNombreCasseConc(s.toString().trim());
-
             }
 
             @Override
@@ -334,16 +334,14 @@ public class MaterielCustomAdapter extends BaseAdapter {
         });
 
         if(holder == null){
-            Log.i("holder2", "holder est NULLLLLLLLLLLLLL");
+         //   Log.i("holder2", "holder est NULLLLLLLLLLLLLL");
         } else {
-            Log.i("holder2", "holder est BONNNNNNNNNNNNNNNN");
-            // v.spinner.setSelection(theItemAtPosition.getQuantity());
-            // holder.spinnerBra.setSelection();
             holder.tv_Nom.setText(materielProjections.get(position).getNom());
             holder.txt_Nombre_Conc.setText(materielProjections.get(position).getNombreCon()+"");
             holder.txt_Nombre_Brac.setText(materielProjections.get(position).getNombreBrac()+"");
             holder.txt_Nombre_Brac_casse.setText(materielProjections.get(position).getNombreCasseBrac()+"");
             holder.txt_Nombre_Conc_casse.setText(materielProjections.get(position).getNombreCasseConc()+"");
+            holder.txt_nombreJour.setText(materielProjections.get(position).getJourCasse()+"");
 
         }
         return convertView;
@@ -353,6 +351,7 @@ public class MaterielCustomAdapter extends BaseAdapter {
         DataHolder data;
         TextView tv_Nom;
         EditText txt_Nombre_Brac;
+        EditText txt_nombreJour;
         EditText txt_Nombre_Brac_casse;
         EditText txt_Nombre_Conc;
         EditText txt_Nombre_Conc_casse;

@@ -77,7 +77,6 @@ public class ActionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.action_fragment, container, false);
         reponseProjection = (ReponseProjection) getActivity().getApplicationContext();
         action = new Action();
@@ -96,10 +95,18 @@ public class ActionFragment extends Fragment {
         final CheckBox adressecbx = (CheckBox)rootView.findViewById(R.id.adressecbx);
         final CheckBox chaisecbx = (CheckBox)rootView.findViewById(R.id.chaisecbx);
         final CheckBox phncbx = (CheckBox)rootView.findViewById(R.id.phncbx);
+        final CheckBox regimeCbx = (CheckBox)rootView.findViewById(R.id.regimeCorriger);
+        final CheckBox materielRenseigneCbx = (CheckBox) rootView.findViewById(R.id.mNrenseigne);
+        final CheckBox materielTrouveCbx = (CheckBox) rootView.findViewById(R.id.mNtrouve);
+        final CheckBox renforcerFroidCbx = (CheckBox) rootView.findViewById(R.id.renforcerFroidcbx);
         suivantBtn = (Button) rootView.findViewById(R.id.btn_question_suivant);
         suivantBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                action.setMaterielNonRenseigneDansContrat(materielRenseigneCbx.isChecked());
+                action.setMaterielNonTrouves(materielTrouveCbx.isChecked());
+                action.setRegimeACorriger(regimeCbx.isChecked());
+                action.setaRenforcerFroid(renforcerFroidCbx.isChecked());
                 action.setBesoinDeContrat(besoinContratCbx.isChecked());
                 action.setContratPartiel(contratPartielcbx.isChecked());
                 action.setBesoinRenouvellementContrat(renouvelContratcbx.isChecked());
@@ -145,6 +152,7 @@ public class ActionFragment extends Fragment {
 
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Actions");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("");
 
     }
 
@@ -200,8 +208,8 @@ public class ActionFragment extends Fragment {
         @Override
         protected Void doInBackground(String... urls) {
 
-            Log.i("Bacground","background test");
-            Retrofit retrofit = RetrofitBuiler.getRetrofit();
+          //  Log.i("Bacground","background test");
+            Retrofit retrofit = RetrofitBuiler.getRetrofit("");
             ReponseService service = retrofit.create(ReponseService.class);
             Call<ReponseProjection> call= service.envoyerReponse(reponseProjection);
             call.enqueue(new Callback<ReponseProjection>() {

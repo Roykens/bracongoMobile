@@ -74,7 +74,7 @@ public class BoissonListAdapter extends BaseAdapter {
         TextView tv_Nom = (TextView)layout.findViewById(R.id.nomboisson);
         tv_Nom.setText(boissons.get(position).getNom());
         TextView tv_Prix = (TextView)layout.findViewById(R.id.prixBoisson);
-        Log.i("Prix de la bois", boissons.get(position).getPrix()+"");
+        //Log.i("Prix de la bois", boissons.get(position).getPrix()+"");
         tv_Prix.setText(boissons.get(position).getPrix() + " Fc");
         tv_Nom.setTag(position);
         return layout;

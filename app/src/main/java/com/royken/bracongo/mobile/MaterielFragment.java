@@ -145,6 +145,7 @@ public class MaterielFragment extends Fragment implements AdapterView.OnItemClic
             //getListView().setOnItemClickListener(this);
         }
           ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Materiel");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("");
 
     }
 

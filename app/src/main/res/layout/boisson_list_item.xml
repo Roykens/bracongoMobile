@@ -7,7 +7,8 @@
         xmlns:cardView="http://schemas.android.com/apk/res-auto"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-
+        cardView:cardCornerRadius="4dp"
+        cardView:cardElevation="3dp"
         android:layout_marginBottom="3dp"
         >
 
@@ -22,7 +23,7 @@
                 android:id="@+id/image_view_boisson"
                 android:background="#ffffff"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="70dp"
                 android:layout_weight="20"
                 android:paddingTop="5dp"
                 android:paddingLeft="5dp"

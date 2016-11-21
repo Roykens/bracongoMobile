@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Side Menu1</string>
+    <string name="app_name">Bracongo Survey</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Ouvrir menu de navigation</string>
+    <string name="navigation_drawer_close">Fermer menu de navigation</string>
 
     <string name="action_settings">Settings</string>
 
@@ -16,6 +16,8 @@
     </string-array>
 
     <string name="choice_prompt2">SRD</string>
+    <string name="action_help">Aide</string>
+    <string name="action_about">A propos</string>
     <string-array name="choices2">
         <item>OUI</item>
         <item>NON</item>

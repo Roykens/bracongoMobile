@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         cardView:cardCornerRadius="4dp"
+        cardView:cardElevation="3dp"
         android:layout_gravity="center"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
@@ -59,7 +60,7 @@
 
                          />
                 </android.support.design.widget.TextInputLayout>
-                <requestFocus></requestFocus>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -104,6 +105,16 @@
                     android:layout_weight="1"
                     />
             </LinearLayout>
+
+
+            <EditText android:id="@+id/txtJour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="Nombre de jour"
+
+                />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
@@ -128,7 +139,7 @@
                         android:hint="Nombre Conc"
                         />
                 </android.support.design.widget.TextInputLayout>
-                <requestFocus></requestFocus>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -169,10 +180,6 @@
                     android:layout_weight="1"
                     />
             </LinearLayout>
-
-
-
-
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </FrameLayout>

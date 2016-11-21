@@ -70,6 +70,22 @@ public class Action implements Serializable {
     @SerializedName("phnCapsule")
     private boolean phnCapsule;
 
+    @Expose(serialize = true)
+    @SerializedName("regimeACorriger")
+    private boolean regimeACorriger;
+
+    @Expose(serialize = true)
+    @SerializedName("materielNonRenseigneDansContrat")
+    private boolean materielNonRenseigneDansContrat;
+
+    @Expose(serialize = true)
+    @SerializedName("materielNonTrouves")
+    private boolean materielNonTrouves;
+
+    @Expose(serialize = true)
+    @SerializedName("aRenforcerFroid")
+    private boolean aRenforcerFroid;
+
     public boolean isBesoinDeContrat() {
         return besoinDeContrat;
     }
@@ -188,5 +204,37 @@ public class Action implements Serializable {
 
     public void setPhnCapsule(boolean phnCapsule) {
         this.phnCapsule = phnCapsule;
+    }
+
+    public boolean isRegimeACorriger() {
+        return regimeACorriger;
+    }
+
+    public void setRegimeACorriger(boolean regimeACorriger) {
+        this.regimeACorriger = regimeACorriger;
+    }
+
+    public boolean isMaterielNonRenseigneDansContrat() {
+        return materielNonRenseigneDansContrat;
+    }
+
+    public void setMaterielNonRenseigneDansContrat(boolean materielNonRenseigneDansContrat) {
+        this.materielNonRenseigneDansContrat = materielNonRenseigneDansContrat;
+    }
+
+    public boolean isMaterielNonTrouves() {
+        return materielNonTrouves;
+    }
+
+    public void setMaterielNonTrouves(boolean materielNonTrouves) {
+        this.materielNonTrouves = materielNonTrouves;
+    }
+
+    public boolean isaRenforcerFroid() {
+        return aRenforcerFroid;
+    }
+
+    public void setaRenforcerFroid(boolean aRenforcerFroid) {
+        this.aRenforcerFroid = aRenforcerFroid;
     }
 }

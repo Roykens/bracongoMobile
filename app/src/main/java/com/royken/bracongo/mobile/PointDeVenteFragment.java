@@ -2,6 +2,9 @@ package com.royken.bracongo.mobile;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,11 +17,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -34,11 +44,13 @@ import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * Created by royken on 12/04/16.
  */
-public class PointDeVenteFragment extends Fragment{
+public class PointDeVenteFragment extends Fragment  implements LocationListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,24 +80,39 @@ public class PointDeVenteFragment extends Fragment{
     private String type;
     private String categorie;
     private String regime;
+    LatLng moi;
+    LatLng pdv;
 
     private OnFragmentInteractionListener mListener;
 
     MapView mMapView;
     private GoogleMap mMap;
 
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
+    protected Context context;
+    String provider;
+    protected String lat,lon;
+    protected boolean gps_enabled,network_enabled;
+
+    Location mLastLocation;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    TextView adressetv;
+
+
     public static PointDeVenteFragment newInstance(int id, int ids, String nom, String adresse, double longitude, double latitude,String type, String regime, String categorie) {
         PointDeVenteFragment fragment = new PointDeVenteFragment();
         Bundle args = new Bundle();
 
-        args.putInt(ARG_ID,id);
-        args.putInt(ARG_IDS,ids);
+        args.putInt(ARG_ID, id);
+        args.putInt(ARG_IDS, ids);
         args.putString(ARG_NOM, nom);
         args.putString(ARG_ADRESSE,adresse);
         args.putDouble(ARG_LATITUDE,latitude);
-        args.putDouble(ARG_LONGITUDE,longitude);
-        args.putString(ARG_TYPE,type);
-        args.putString(ARG_CATEGORIE,categorie);
+        args.putDouble(ARG_LONGITUDE, longitude);
+        args.putString(ARG_TYPE, type);
+        args.putString(ARG_CATEGORIE, categorie);
         args.putString(ARG_REGIME, regime);
         fragment.setArguments(args);
         return fragment;
@@ -113,12 +140,11 @@ public class PointDeVenteFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.point_de_vente_detail, container, false);
         mMapView = (MapView) rootView.findViewById(R.id.pdvMap);
         mMapView.onCreate(savedInstanceState);
 
-        mMapView.onResume();// needed to get the map to display immediately
+        mMapView.onResume();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -128,50 +154,62 @@ public class PointDeVenteFragment extends Fragment{
 
         mMap = mMapView.getMap();
 
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(-4.3275949, 15.341604))
-                .title("Moi")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        //locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
 
-        LatLng pdv = new LatLng(latitude, longitude);
-        LatLng moi = new LatLng(-4.3275949,15.341604);
-        Marker hamburg = mMap.addMarker(new MarkerOptions().position(pdv)
-                .title(nom).snippet(adresse));
- /*       Marker kiel = mMap.addMarker(new MarkerOptions()
-                .position(KIEL)
-                .title("Kiel")
-                .snippet("Kiel is cool"));
-*/
-        // Move the camera instantly to hamburg with a zoom of 15.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pdv, 15));
+        // Enable Zoom
+        if(mMap != null) {
+            mMap.getUiSettings().setZoomGesturesEnabled(true);
+            //set Map TYPE
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        // Zoom in, animating the camera.
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        route(moi, pdv, "");
+            //enable Current location Button
+            mMap.setMyLocationEnabled(true);
+        }
+        /////////////////
 
-
-
+        buildGoogleApiClient();
+        adressetv = (TextView)rootView.findViewById(R.id.adresse);
+        adressetv.setText(adresse);
         Button fab = (Button) rootView.findViewById(R.id.pdvBtn);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               //Fragment fragment = TwoFragment.newInstance(true,true,null);
                 Fragment fragment = QuestionFragment.newInstance("","");
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.mainFrame, fragment);
                 ft.addToBackStack(null);
 
                 ft.commit();
-          //      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            //            .setAction("Action", null).show();
-            }
+              }
         });
 
         return rootView;
     }
+
+
+
+    @Override
+    public void onLocationChanged(Location location){
+        mMap.clear();
+        moi = new LatLng(location.getLatitude(),location.getLongitude());
+        mMap.addMarker(new MarkerOptions()
+                .position(moi)
+                .title("Moi")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        Marker pdvMarker = mMap.addMarker(new MarkerOptions().position(pdv)
+                .title(nom).snippet(adresse));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(moi, 15));
+
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        route(moi, pdv, "");
+
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -197,6 +235,7 @@ public class PointDeVenteFragment extends Fragment{
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -209,7 +248,7 @@ public class PointDeVenteFragment extends Fragment{
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
     protected void route(LatLng sourcePosition, LatLng destPosition, String mode) {
@@ -232,9 +271,99 @@ public class PointDeVenteFragment extends Fragment{
                 }
             }
 
-            ;
         };
 
         new GMapV2DirectionAsyncTask(handler, sourcePosition, destPosition, GMapV2Direction.MODE_DRIVING).execute();
+    }
+
+   /* public GoogleMap.OnMyLocationChangeListener myLocationChangeListener() {
+        return new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
+
+                Marker marker;
+                marker = mMap.addMarker(new MarkerOptions().position(loc));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+
+            }
+        };
+    }
+
+    */
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+       // mLocationRequest.setInterval(300); // Update location every second
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            lat = String.valueOf(mLastLocation.getLatitude());
+            lon = String.valueOf(mLastLocation.getLongitude());
+
+        }
+
+        pdv = new LatLng(latitude, longitude);
+        if(mLastLocation != null) {
+            moi = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        }
+        else {
+            moi = new LatLng(-4.3277457, 15.3415218);
+        }
+        mMap.addMarker(new MarkerOptions()
+                .position(moi)
+                .title("Moi")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        Marker pdvMarker = mMap.addMarker(new MarkerOptions().position(pdv)
+                .title(nom).snippet(adresse));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(moi, 15));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        route(moi, pdv, "");
+       // updateUI();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        buildGoogleApiClient();
+    }
+
+    synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 }

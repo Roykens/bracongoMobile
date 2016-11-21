@@ -35,6 +35,10 @@ public class MaterielProjection implements Serializable {
     private String EtatConc;
 
     @Expose
+    @SerializedName("jourCasse")
+    private String jourCasse;
+
+    @Expose
     @SerializedName("nombreCasseBrac")
     private String nombreCasseBrac;
 
@@ -42,13 +46,14 @@ public class MaterielProjection implements Serializable {
     @SerializedName("nombreCasseConc")
     private String nombreCasseConc;
 
-    public MaterielProjection(int idServeur, String nom, String nombreBrac, String etatBrac, String nombreCon, String etatConc, String nombreCasseBrac, String nombreCasseConc) {
+    public MaterielProjection(int idServeur, String nom, String nombreBrac, String etatBrac, String nombreCon, String etatConc, String jourCasse, String nombreCasseBrac, String nombreCasseConc) {
         this.idServeur = idServeur;
         this.nom = nom;
         this.nombreBrac = nombreBrac;
         EtatBrac = etatBrac;
         this.nombreCon = nombreCon;
         EtatConc = etatConc;
+        this.jourCasse = jourCasse;
         this.nombreCasseBrac = nombreCasseBrac;
         this.nombreCasseConc = nombreCasseConc;
     }
@@ -132,5 +137,13 @@ public class MaterielProjection implements Serializable {
                 ", nombreCasseBrac='" + nombreCasseBrac + '\'' +
                 ", nombreCasseConc='" + nombreCasseConc + '\'' +
                 '}';
+    }
+
+    public String getJourCasse() {
+        return jourCasse;
+    }
+
+    public void setJourCasse(String jourCasse) {
+        this.jourCasse = jourCasse;
     }
 }

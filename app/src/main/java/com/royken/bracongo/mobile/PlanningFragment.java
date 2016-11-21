@@ -34,6 +34,7 @@ import com.royken.bracongo.mobile.entities.PointDeVente;
 import com.royken.bracongo.mobile.entities.projection.PlanningEnquetteur;
 import com.royken.bracongo.mobile.util.AndroidNetworkUtility;
 import com.royken.bracongo.mobile.util.ReponseService;
+import com.royken.bracongo.mobile.util.RetrofitBuiler;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -115,6 +116,12 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
         return fragment;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setEmptyText("Aucun point de vente à visiter.");
+    }
+
     public static PlanningFragment newInstance(int id, int ids, String nom, String adresse, double longitude, double latitude,String type, String regime, String categorie) {
         PlanningFragment fragment = new PlanningFragment();
         Bundle args = new Bundle();
@@ -167,6 +174,7 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
 
         setHasOptionsMenu(true);
         setListAdapter(boissonCustomAdapter);
+
         // TODO: Change Adapter to display your content
         //   setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
         //         android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS));
@@ -216,7 +224,7 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-     //   Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getActivity(), "Item: " + pointDeVentes.get(position).getAdresse(), Toast.LENGTH_SHORT).show();
 
                 Fragment fragment = PointDeVenteFragment.newInstance(pointDeVentes.get(position).getId(),pointDeVentes.get(position).getIdServeur(),pointDeVentes.get(position).getNom(),pointDeVentes.get(position).getAdresse(),pointDeVentes.get(position).getLongitude(),pointDeVentes.get(position).getLatitude(),pointDeVentes.get(position).getType(),pointDeVentes.get(position).getRegime(),pointDeVentes.get(position).getCategorie());
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -248,36 +256,27 @@ public class PlanningFragment extends ListFragment implements AdapterView.OnItem
         switch (item.getItemId()) {
             case R.id.actualisePlanning:
                 //Toast.makeText(getActivity().getApplicationContext(),"Du courage mon type",Toast.LENGTH_LONG).show();
-                new PlanningAsyncTask().execute();
-                return true;
+                AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
+                settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                String url = settings.getString("com.royken.url", "");
+                if (!androidNetworkUtility.isConnected(getActivity())) {
+                    Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
+
+                } else {
+                    new PlanningAsyncTask().execute();
+                    return true;
+                }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private void refreshContent() throws IOException {
-        Retrofit retrofit;
-        Gson gson = new GsonBuilder()
-                .disableHtmlEscaping()
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-                .setPrettyPrinting()
-                .serializeNulls()
-                .excludeFieldsWithoutExposeAnnotation().create();
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String url = settings.getString("com.royken.url", "");
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-// add your other interceptors …
-
-// add logging as last interceptor
-        httpClient.addInterceptor(logging);
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.110:8080/")
-                        //.addConverterFactory(JacksonConverterFactory.create(mapper))
-                .client(httpClient.build())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
+        Retrofit retrofit = RetrofitBuiler.getRetrofit(url + "/");
         ReponseService service = retrofit.create(ReponseService.class);
         Call<PlanningEnquetteur> call = service.getPlanning(login,password);
         //List<Boisson> result = call.execute().body();

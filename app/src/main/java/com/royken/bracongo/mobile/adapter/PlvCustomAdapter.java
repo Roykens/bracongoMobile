@@ -112,6 +112,7 @@ public class PlvCustomAdapter extends BaseAdapter {
         plvProjections = new ArrayList<>();
         for (Plv plv: plvs) {
             PlvProjection plvProjection = new PlvProjection(plv.getNom(),plv.getIdServeur(),"","","","");
+            //Log.i("LE PLVVVVVVVVVVV", plvProjection.toString());
             plvProjections.add(plvProjection);
         }
     }
@@ -131,6 +132,7 @@ public class PlvCustomAdapter extends BaseAdapter {
         FrameLayout layout;
         if (convertView == null || convertView.getTag() == null) {
             holder = new ViewHolder();
+
             convertView = mInflater.inflate(R.layout.plv,parent,false);
             layout = (FrameLayout) mInflater.inflate(R.layout.test, parent, false);
             holder.tv_Nom = (TextView)convertView.findViewById(R.id.tvAffiche);
@@ -139,14 +141,11 @@ public class PlvCustomAdapter extends BaseAdapter {
             holder.spinnerBra = (Spinner)convertView.findViewById(R.id.etatBracongo);
             holder.spinnerConc = (Spinner)convertView.findViewById(R.id.etatConcu);
             holder.data = new DataHolder(getmContext());
-            if(holder.data == null){
-                Log.i("data","Datat est NULLLLLLLLLLLLLLLLLLLLLLLL");
-            }
-            if(holder.spinnerBra == null){
-                Log.i("SPINNER","Le spinner est null");
-            }
+
             holder.spinnerBra.setAdapter(adapter);
             holder.spinnerConc.setAdapter(adapter2);
+            holder.rowView = convertView;
+            holder.rowView.setTag(holder);
 
             holder.spinnerBra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -197,21 +196,6 @@ public class PlvCustomAdapter extends BaseAdapter {
         holder.txt_Conc.setTag(position);
         holder.txt_Brac.setTag(position);
 
-     /*   holder.spinnerBra.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                holder.data.setSelected(arg2);
-                int pos = (Integer) holder.tv_Nom.getTag();
-                plvProjections.get(pos).setEtatBrac(holder.data.getText());
-                // viewHolder.text.setText(viewHolder.data.getText());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-            }
-
-        });*/
 
         holder.txt_Brac.addTextChangedListener(new TextWatcher() {
 
@@ -262,33 +246,21 @@ public class PlvCustomAdapter extends BaseAdapter {
         });
 
         if(holder == null){
-            Log.i("holder2", "holder est NULLLLLLLLLLLLLL");
-        } else {
-            Log.i("holder2", "holder est BONNNNNNNNNNNNNNNN");
-           // v.spinner.setSelection(theItemAtPosition.getQuantity());
-           // holder.spinnerBra.setSelection();
 
+        } else {
+
+            holder.tv_Nom.setText(plvProjections.get(position).getNom());
             holder.txt_Conc.setText(plvProjections.get(position).getNombreConc()+"");
             holder.txt_Brac.setText(plvProjections.get(position).getNombreBrac()+"");
-            //holder.spinnerBra.setSe
-            //  holder.tv_Nom = (TextView)layout.findViewById(R.id.textView2);
-           // holder.tv_Nom.setText(boissonProjections.get(position).getNom());
-            //  holder.cbox = (CheckBox)layout.findViewById(R.id.checkBox);
-           // holder.cbox.setChecked(boissonProjections.get(position).isDisponible());
-            // holder.txt_Prix = (EditText)layout.findViewById(R.id.txtPrix);
-           // holder.txt_Prix.setText(boissonProjections.get(position).getPrix());
-            // holder.txt_Stock = (EditText)layout.findViewById(R.id.txtStock);
-           // holder.txt_Stock.setText(boissonProjections.get(position).getStock());
-            // holder.tv_Nom.setTag(position);
-            // holder.txt_Stock.setTag(position);
-            //holder.txt_Prix.setTag(position);
-            // holder.cbox.setTag(position);
+          //  holder.spinnerBra.setSelection();
+
         }
         return convertView;
 
     }
 
     public class ViewHolder {
+        View rowView;
         DataHolder data;
         TextView tv_Nom;
         EditText txt_Brac;

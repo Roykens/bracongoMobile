@@ -16,7 +16,7 @@ public class RetrofitBuiler {
 
     private Retrofit retrofit;
 
-    public static Retrofit getRetrofit(){
+    public static Retrofit getRetrofit(String url){
         Gson gson = new GsonBuilder()
                 .disableHtmlEscaping()
                 .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
@@ -34,7 +34,7 @@ public class RetrofitBuiler {
         httpClient.addInterceptor(logging);
 
         return new Retrofit.Builder()
-                .baseUrl("http://192.168.1.110:8080/")
+                .baseUrl(url)
                 .client(httpClient.build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

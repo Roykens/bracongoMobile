@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,14 +84,12 @@ public class QuestionFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-            // TextView tv = (TextView)fi;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.question, container, false);
         reponseProjection = (ReponseProjection) getActivity().getApplicationContext();
         final EditText txtmballageBrac = (EditText)rootView.findViewById(R.id.txtEmballageBrac);
@@ -109,8 +108,21 @@ public class QuestionFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                reponseProjection.setParcEmballageBracongo(Integer.parseInt(txtmballageBrac.getText().toString().trim()));
-                reponseProjection.setParcEmballageBralima(Integer.parseInt(txtmballageConc.getText().toString().trim()));
+                String ebalBrac = txtmballageBrac.getText().toString().trim();
+                if(!ebalBrac.isEmpty()){
+                    reponseProjection.setParcEmballageBracongo(Integer.parseInt(ebalBrac));
+                }
+                else {
+                    reponseProjection.setParcEmballageBracongo(0);
+                }
+                String ebalBral = txtmballageConc.getText().toString().trim();
+                if(!ebalBral.isEmpty()){
+                    reponseProjection.setParcEmballageBralima(Integer.parseInt(ebalBral));
+                }
+                else {
+                    reponseProjection.setParcEmballageBralima(0);
+                }
+
                 String jourBrac = txtpassgeBrac.getText().toString().trim();
                 String jourBral = txtpassgeBral.getText().toString().trim();
                 boolean srdbrac;
@@ -128,8 +140,13 @@ public class QuestionFragment extends Fragment {
                 else {
                     reponseProjection.setJoursEcouleVisiteFDVBral(-1);
                 }
-
-                reponseProjection.setNombrePhn(Integer.parseInt(txtPhn.getText().toString().trim()));
+                String phn = txtPhn.getText().toString().trim();
+                if(!phn.isEmpty()){
+                    reponseProjection.setNombrePhn(Integer.parseInt(phn));
+                }
+                else {
+                    reponseProjection.setNombrePhn(0);
+                }
                 if(srdBracV.trim().equalsIgnoreCase("OUI")){
                     reponseProjection.setSrdBrac(true);
                     srdbrac = true;
@@ -155,8 +172,6 @@ public class QuestionFragment extends Fragment {
                 Calendar gc = new GregorianCalendar();
                 Date d2;
                 if(srdbrac){
-
-                    //gc.setTime(d);
                     gc.set(Calendar.HOUR_OF_DAY, Integer.parseInt(heureBrac)-1);
                     gc.set(Calendar.MINUTE,Integer.parseInt(minuteBrac));
                     // gc.add(Calendar.HOUR, 2);
@@ -229,7 +244,7 @@ public class QuestionFragment extends Fragment {
                         heureBral = selectedHour + "";
                         minuteBral = selectedMinute + "";
                     }
-                }, hour, minute, true);//Yes 24 hour time
+                }, hour, minute, true);
                 mTimePicker.setTitle("Choisir le temps");
                 mTimePicker.show();
 
@@ -245,12 +260,7 @@ public class QuestionFragment extends Fragment {
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                //holder.data.setSelected(arg2);
-                //int pos = (Integer) arg0.getTag();
-
-                //plvProjections.get(pos).setEtatBrac((String)arg0.getItemAtPosition(arg2));
                 srdBracV = (String) arg0.getItemAtPosition(arg2);
-                // viewHolder.text.setText(viewHolder.data.getText());
             }
 
             @Override
@@ -262,11 +272,7 @@ public class QuestionFragment extends Fragment {
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                //holder.data.setSelected(arg2);
-                //int pos = (Integer) arg0.getTag();
-                     //plvProjections.get(pos).setEtatBrac((String)arg0.getItemAtPosition(arg2));
                 fifoStr = (String) arg0.getItemAtPosition(arg2);
-                // viewHolder.text.setText(viewHolder.data.getText());
             }
 
             @Override
@@ -278,11 +284,7 @@ public class QuestionFragment extends Fragment {
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                //holder.data.setSelected(arg2);
-                //int pos = (Integer) arg0.getTag();
-                //plvProjections.get(pos).setEtatBrac((String)arg0.getItemAtPosition(arg2));
                 srdBralV =  (String)arg0.getItemAtPosition(arg2);
-                // viewHolder.text.setText(viewHolder.data.getText());
             }
 
             @Override
@@ -291,6 +293,14 @@ public class QuestionFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Question");
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

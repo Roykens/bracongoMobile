@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -54,6 +56,7 @@ import retrofit2.Retrofit;
  */
 public class CommentFragment extends Fragment implements View.OnClickListener {
 
+    public static final String PREFS_NAME = "com.royken.MyPrefsFile";
     Button captureBtn = null;
     final int CAMERA_CAPTURE = 1;
 
@@ -61,6 +64,8 @@ public class CommentFragment extends Fragment implements View.OnClickListener {
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private ReponseProjection reponseProjection;
+
+    private EditText commentTx;
 
     private Button envoyer;
 
@@ -102,12 +107,16 @@ public class CommentFragment extends Fragment implements View.OnClickListener {
         gridview = (GridView) rootView.findViewById(R.id.gridView1);
        // gridview.setAdapter(new ImageAdapter(getActivity().getApplicationContext()));
       //  photo = (Button)rootView.findViewById(R.id.photo);
+        commentTx = (EditText)rootView.findViewById(R.id.comment);
         envoyer = (Button)rootView.findViewById(R.id.envoyerBtn);
         envoyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                reponseProjection.setCommentaire(commentTx.getText().toString());
                 AndroidNetworkUtility androidNetworkUtility = new AndroidNetworkUtility();
-                if (!androidNetworkUtility.isConnectedToServer("http://192.168.1.110:8080", 1000)) {
+                SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                String url = settings.getString("com.royken.url", "");
+                if (!androidNetworkUtility.isConnected(getActivity())) {
                     Toast.makeText(getActivity(), "Aucune connexion au serveur. Veuillez reéssayer plus tard", Toast.LENGTH_LONG).show();
                 } else {
                     new BackgroundTask().execute();
@@ -400,7 +409,9 @@ public class CommentFragment extends Fragment implements View.OnClickListener {
         protected Void doInBackground(String... urls) {
 
             Log.i("Bacground","background test");
-            Retrofit retrofit = RetrofitBuiler.getRetrofit();
+            SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            String url = settings.getString("com.royken.url","");
+            Retrofit retrofit = RetrofitBuiler.getRetrofit(url+"/");
             ReponseService service = retrofit.create(ReponseService.class);
             Call<ReponseProjection> call= service.envoyerReponse(reponseProjection);
             call.enqueue(new Callback<ReponseProjection>() {

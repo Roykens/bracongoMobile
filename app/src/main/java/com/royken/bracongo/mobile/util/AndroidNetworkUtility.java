@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -26,6 +28,22 @@ import java.net.URLConnection;
 public class AndroidNetworkUtility {
 
     private static final String TAG = "AndroidNetworkUtility";
+
+
+    public static boolean isReachable(String addr, int timeOutMillis) {
+        // Any Open port on other machine
+        // openPort =  22 - ssh, 80 or 443 - webserver, 25 - mailserver etc.
+        String url =addr.substring(8,addr.length()-5);
+        int port = Integer.parseInt(addr.substring(addr.length() - 4, addr.length()));
+        try {
+            try (Socket soc = new Socket()) {
+                soc.connect(new InetSocketAddress("http://192.168.1.110", 8080), timeOutMillis);
+            }
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
 
     public boolean isConnected(Context ctx) {
         boolean flag = false;
